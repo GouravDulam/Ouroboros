@@ -6,7 +6,7 @@ import { BOOT, THOUGHTS, ROOMS, PZ, WIN_ART, LOSE_ART, WIN_SNAKE, LOSE_SNAKE } f
 const PM = {};
 PZ.forEach(p => { PM[p.id] = p; });
 
-const socket = io('http://localhost:3001');
+const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001');
 
 const App = () => {
   const [screen, setScreen] = useState('boot'); // boot, start, game, end
