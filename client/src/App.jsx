@@ -131,9 +131,11 @@ const App = () => {
             const nextLv = Math.min(...availableLevels);
             const nextPuzzles = PZ.filter(pz => pz.lv === nextLv);
             setS(prev => ({ ...prev, waiting: true }));
-            const pool = [...ROOMS].sort(() => Math.random() - 0.5).slice(0, 1);
-            const choices = nextPuzzles.sort(() => Math.random() - 0.5).slice(0, 1);
-            setRoomChoices(choices.map((c, i) => ({ cid: c.id, room: pool[i] || ROOMS[i] })));
+            // Instead of client-side Math.random(), pick deterministically so all players get the same puzzle at this level.
+            // (The puzzles were already globally shuffled by patch_data.js)
+            const pool = [ROOMS[nextLv % ROOMS.length]];
+            const choices = [nextPuzzles[0]];
+            setRoomChoices(choices.map((c, i) => ({ cid: c.id, room: pool[i] || ROOMS[0] })));
           } else {
             endGame(true);
           }
