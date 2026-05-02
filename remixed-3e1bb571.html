@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OUROBOROS</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+/* ── PALETTE ──────────────────────────────────────
+   chartreuse/bile   #b8ff00  → poison, radiation, decay
+   blood red         #ff0033  → danger, viscera
+   deep violet       #aa00ff  → corruption, bruising
+   toxic orange      #ff6600  → warning, rot
+   jaundice yellow   #ffe000  → sickness, bile
+   sickly mint       #00ff99  → used sparingly — deeply wrong next to red
+   ────────────────────────────────────────────────── */
+:root{
+  --bg:   #000000;
+  --sur:  #040004;
+  --c1:   #b8ff00;   /* chartreuse — primary */
+  --c2:   #ff0033;   /* blood */
+  --c3:   #aa00ff;   /* violet */
+  --c4:   #ff6600;   /* toxic orange */
+  --c5:   #ffe000;   /* jaundice */
+  --c6:   #00ff99;   /* sickly mint — wrong */
+  --d1:   #2a3a00;   /* dark poison */
+  --d2:   #330011;   /* dark blood */
+  --d3:   #1a0033;   /* void purple */
+  --d4:   #3a2800;   /* dark bile */
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--c1);font-family:'VT323',monospace;font-size:18px;overflow-x:hidden;image-rendering:pixelated;}
+
+/* CRT scanlines */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0px,rgba(0,0,0,.25) 1px,transparent 1px,transparent 3px);}
+/* vignette + red tint pulse */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(80,0,0,.7) 100%);
+  animation:vf .18s infinite;}
+@keyframes vf{0%,100%{opacity:1}93%{opacity:.9}95%{opacity:.7}97%{opacity:.95}}
+
+/* tiled oo background */
+body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Ctext x='4' y='32' font-size='24' fill='%230a0500' font-family='monospace'%3E%E2%88%9E%3C/text%3E%3C/svg%3E");}
+
+/* ── KEYFRAMES ── */
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes sblink{0%,60%{opacity:1}61%,100%{opacity:0}}
+@keyframes glitch{
+  0%,100%{text-shadow:3px 0 var(--c2),-3px 0 var(--c3),0 0 10px var(--c1)}
+  15%{text-shadow:-5px 0 var(--c2),5px 0 var(--c3),0 0 25px var(--c1)}
+  40%{text-shadow:5px 3px var(--c2),-5px -3px var(--c3),0 0 6px var(--c4)}
+  70%{text-shadow:-3px 0 var(--c6),3px 0 var(--c2),0 0 18px var(--c1)}
+}
+@keyframes gs{
+  0%,78%,100%{transform:translateX(0) skewX(0)}
+  79%{transform:translateX(7px) skewX(3deg)}
+  81%{transform:translateX(-9px) skewX(-2deg)}
+  83%{transform:translateX(4px) skewX(1deg)}
+  85%{transform:translateX(0)}
+}
+@keyframes hg{
+  0%,88%,100%{clip-path:none;transform:none}
+  89%{clip-path:inset(25% 0 55% 0);transform:translateX(8px)}
+  91%{clip-path:inset(55% 0 25% 0);transform:translateX(-6px)}
+  93%{clip-path:inset(5% 0 80% 0);transform:translateX(3px)}
+  95%{clip-path:none}
+}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes breathe{0%,100%{opacity:.55;text-shadow:0 0 4px var(--c1)}50%{opacity:1;text-shadow:0 0 18px var(--c1),0 0 40px var(--d1)}}
+@keyframes bloodPulse{0%,100%{text-shadow:0 0 4px var(--c2),0 0 0px #000}50%{text-shadow:0 0 20px var(--c2),0 0 40px var(--d2)}}
+@keyframes violetPulse{0%,100%{opacity:.4}50%{opacity:1;text-shadow:0 0 14px var(--c3)}}
+@keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sp{0%,93%,100%{opacity:0}94%,96%{opacity:.1}95%,97%{opacity:.03}}
+@keyframes rotHue{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+@keyframes crawl{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+
+/* ── STATIC NOISE ── */
+#sfx{position:fixed;inset:0;z-index:8900;pointer-events:none;opacity:0;animation:sp 3s ease-in-out infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");}
+
+/* ── BLOOD DRIP OVERLAY ── */
+#drip{position:fixed;top:0;left:0;right:0;height:8px;z-index:8800;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0,transparent 6px,var(--c2) 6px,var(--c2) 7px);
+  opacity:.35;box-shadow:0 2px 8px var(--c2);}
+
+/* ── TICKERS ── */
+.ticker{position:fixed;left:0;right:0;z-index:500;overflow:hidden;height:22px;display:flex;align-items:center;background:#000;}
+.ticker.top{top:0;border-bottom:1px solid var(--d2);}
+.ticker.bot{bottom:0;border-top:1px solid var(--d3);}
+.ttag{flex-shrink:0;height:100%;display:flex;align-items:center;padding:0 8px;font-size:13px;white-space:nowrap;}
+.ttag.poison{background:var(--c1);color:#000;}
+.ttag.blood{background:var(--c2);color:#000;}
+.ttag.violet{background:var(--c3);color:#000;}
+.tscroll{white-space:nowrap;font-size:13px;animation:marquee 30s linear infinite;}
+.ticker.top .tscroll{color:var(--c1);animation-duration:34s;}
+.ticker.bot .tscroll{color:var(--c3);animation-direction:reverse;animation-duration:20s;}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:10;padding:28px 14px 26px;overflow-y:auto;transition:opacity .3s;}
+.screen.hidden{opacity:0;pointer-events:none;}
+
+/* ── BOOT ── */
+#boot{position:fixed;inset:0;background:#000;z-index:9000;display:flex;flex-direction:column;padding:18px;font-size:15px;overflow:hidden;transition:opacity .6s;}
+#boot.fade{opacity:0;pointer-events:none;}
+.bl{margin:1px 0;white-space:nowrap;}
+.bl.ok{color:var(--c1);}
+.bl.dim{color:var(--d1);}
+.bl.warn{color:var(--c4);}
+.bl.err{color:var(--c2);animation:blink .5s step-end 5;}
+.bl.vio{color:var(--c3);}
+.bcursor{display:inline-block;width:10px;height:17px;background:var(--c1);animation:blink .7s step-end infinite;vertical-align:middle;}
+
+/* ── HUD ── */
+#hud{position:fixed;top:22px;left:0;right:0;z-index:400;background:#000;border-bottom:1px solid var(--d2);padding:3px 12px;display:none;font-size:15px;}
+.hi{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;}
+.hl{color:var(--c4);}
+.hl span{color:var(--c1);}
+.hr{display:flex;gap:14px;align-items:center;}
+.hs{color:var(--d4);}
+.hs b{color:var(--c5);}
+.cpr{display:flex;gap:3px;align-items:center;}
+.cpd{width:10px;height:10px;border:1px solid var(--d2);background:transparent;display:inline-block;}
+.cpd.on{background:var(--c2);border-color:var(--c2);box-shadow:0 0 6px var(--c2);}
+.cpd.ping{background:var(--c5);border-color:var(--c5);animation:blink .2s step-end 7;}
+
+/* ── START ── */
+#startScreen{padding-top:26px;padding-bottom:26px;}
+.sw{width:100%;max-width:720px;display:flex;flex-direction:column;gap:7px;}
+
+.oart{white-space:pre;font-size:12.5px;text-align:center;line-height:1.25;font-family:'Share Tech Mono',monospace;}
+.oart.poison{color:var(--c1);animation:breathe 4s ease-in-out infinite;}
+.oart.blood{color:var(--c2);animation:bloodPulse 3s ease-in-out infinite;}
+.oart.vio{color:var(--c3);animation:violetPulse 5s ease-in-out infinite;}
+.oart.dim{color:var(--d1);}
+
+.dl{white-space:nowrap;overflow:hidden;font-size:13px;user-select:none;}
+.dl.poison{color:var(--d1);}
+.dl.blood{color:var(--d2);}
+.dl.vio{color:var(--d3);}
+.dl.orange{color:var(--d4);}
+.dl.bright{color:var(--c4);}
+
+.gtitle{font-size:clamp(3rem,13vw,6.5rem);text-align:center;color:var(--c1);letter-spacing:.18em;line-height:1;
+  text-shadow:0 0 10px var(--c1),0 0 30px var(--d1);
+  animation:glitch 5s ease-in-out infinite,gs 8s ease-in-out infinite,hg 11s ease-in-out infinite;}
+.gsub{text-align:center;font-size:.95rem;color:var(--c2);letter-spacing:.22em;animation:blink 2.2s step-end infinite;text-shadow:0 0 8px var(--c2);}
+
+/* sysbox */
+.sysbox{border:1px solid var(--d2);background:var(--sur);padding:8px 12px;position:relative;font-size:14px;}
+.sysbox::before{content:attr(data-l);position:absolute;top:-10px;left:8px;background:#000;padding:0 5px;color:var(--c4);font-size:12px;}
+.sysbox.vio{border-color:var(--d3);}
+.sysbox.vio::before{color:var(--c3);}
+
+/* status dots */
+.sr{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;}
+.si{display:flex;gap:6px;align-items:center;}
+.sd{width:8px;height:8px;animation:blink 1.1s step-end infinite;}
+.sd.c1{background:var(--c1);}
+.sd.c2{background:var(--c2);animation-delay:.35s;}
+.sd.c3{background:var(--c3);animation-delay:.7s;}
+.sd.c4{background:var(--c4);animation-delay:.15s;}
+
+/* name */
+.namebox{border:1px solid var(--c2);background:var(--sur);padding:8px 12px;box-shadow:0 0 12px var(--d2) inset;}
+.nlabel{font-size:13px;color:var(--c4);margin-bottom:4px;}
+.nwrap{display:flex;align-items:center;gap:8px;}
+.nprompt{color:var(--c2);font-size:1.3rem;text-shadow:0 0 6px var(--c2);}
+.ninput{flex:1;background:transparent;border:none;outline:none;color:var(--c1);font-family:'VT323',monospace;font-size:1.4rem;caret-color:var(--c2);}
+.ninput::placeholder{color:var(--d1);}
+.ncursor{width:11px;height:20px;background:var(--c2);animation:blink .8s step-end infinite;display:inline-block;}
+
+/* rules */
+.rp{white-space:pre;font-size:13px;color:var(--c4);line-height:1.65;}
+.rp .rh{color:var(--c5);}
+.rp .rd{color:var(--c2);animation:blink 2s step-end infinite;text-shadow:0 0 6px var(--c2);}
+.rp .rv{color:var(--c3);}
+
+/* BUTTONS */
+.btn{font-family:'VT323',monospace;font-size:1.3rem;padding:8px 24px;cursor:pointer;border:none;letter-spacing:2px;background:transparent;transition:all .15s;text-transform:uppercase;position:relative;}
+.btn-p{border:2px solid var(--c1);color:var(--c1);text-shadow:0 0 6px var(--c1);}
+.btn-p:hover{background:var(--c1);color:#000;box-shadow:0 0 24px var(--c1);text-shadow:none;}
+.btn-r{border:2px solid var(--c2);color:var(--c2);text-shadow:0 0 6px var(--c2);}
+.btn-r:hover{background:var(--c2);color:#000;box-shadow:0 0 24px var(--c2);}
+.btn-v{border:1px solid var(--c3);color:var(--c3);}
+.btn-v:hover{background:var(--c3);color:#000;}
+.btn-g{border:1px solid var(--d1);color:var(--d1);font-size:1rem;}
+.btn-g:hover{border-color:var(--c1);color:var(--c1);}
+.btn:disabled{opacity:.2;cursor:not-allowed;}
+
+.visitor{font-size:12px;color:var(--d1);text-align:center;}
+.visitor span{color:var(--c4);}
+.vd{color:var(--c2);animation:sblink 2.5s step-end infinite;text-shadow:0 0 5px var(--c2);}
+
+/* ── GAME ── */
+#gameScreen{padding-top:65px;padding-bottom:28px;align-items:center;}
+.gi{width:100%;max-width:680px;padding:8px 12px 30px;display:flex;flex-direction:column;gap:10px;}
+
+.acard{animation:cardIn .3s ease-out;}
+.acard-top,.acard-bot{white-space:pre;font-size:13px;line-height:1;font-family:'Share Tech Mono',monospace;}
+.acard-top{color:var(--c2);}
+.acard-bot{color:var(--c3);}
+.acard-body{border-left:1px solid var(--d2);border-right:1px solid var(--d3);background:var(--sur);padding:10px 14px;}
+.chdr{display:flex;justify-content:space-between;margin-bottom:7px;font-size:13px;}
+.clv{color:var(--c4);letter-spacing:2px;}
+.cid{color:var(--d1);}
+
+.pq{font-size:1.4rem;color:var(--c5);line-height:1.5;margin-bottom:12px;text-shadow:0 0 4px var(--d4);}
+.phint{font-size:.95rem;color:var(--c3);border-left:2px solid var(--c3);padding:4px 10px;margin-bottom:10px;display:none;text-shadow:0 0 5px var(--d3);}
+.phint.vis{display:block;animation:cardIn .3s;}
+
+.aa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.ap{color:var(--c2);font-size:1.3rem;white-space:nowrap;text-shadow:0 0 6px var(--c2);}
+.ai{flex:1;min-width:150px;background:transparent;border:none;border-bottom:1px solid var(--c1);outline:none;color:var(--c1);font-family:'VT323',monospace;font-size:1.4rem;padding:2px 6px;caret-color:var(--c2);}
+.ai.ok{border-bottom-color:var(--c1);text-shadow:0 0 8px var(--c1);}
+.ai.bad{border-bottom-color:var(--c2);color:var(--c2);animation:shake .4s;}
+
+.cftr{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px;}
+.fb{font-size:1rem;min-height:20px;}
+.fb.ok{color:var(--c1);text-shadow:0 0 6px var(--c1);}
+.fb.bad{color:var(--c2);animation:blink .35s step-end 4;text-shadow:0 0 8px var(--c2);}
+.hbtn{background:none;border:none;color:var(--d1);font-family:'VT323',monospace;font-size:.95rem;cursor:pointer;letter-spacing:1px;}
+.hbtn:hover{color:var(--c3);text-shadow:0 0 6px var(--c3);}
+
+/* rooms */
+.rsec{display:none;flex-direction:column;gap:7px;}
+.rhdr{font-size:13px;color:var(--c4);letter-spacing:2px;text-shadow:0 0 6px var(--c4);}
+.rgrid{display:flex;flex-direction:column;gap:5px;}
+.ropt{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--d2);background:var(--sur);padding:8px 12px;cursor:pointer;transition:all .15s;animation:cardIn .3s both;}
+.ropt:nth-child(1){animation-delay:.04s}.ropt:nth-child(2){animation-delay:.09s}.ropt:nth-child(3){animation-delay:.14s}
+.ropt:hover{border-color:var(--c2);background:rgba(255,0,51,.06);box-shadow:0 0 12px var(--d2) inset;}
+.ropt:hover .rnum{background:var(--c2);color:#000;border-color:var(--c2);}
+.rnum{width:27px;height:27px;border:1px solid var(--d2);color:var(--c2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;}
+.rname{color:var(--c5);font-size:1.1rem;letter-spacing:1px;}
+.rsub{color:var(--c3);font-size:.9rem;font-style:italic;}
+.rico{color:var(--c4);font-size:1.2rem;flex-shrink:0;}
+
+/* breadcrumb + path */
+.bc{font-size:12px;color:var(--d1);display:flex;gap:4px;flex-wrap:wrap;}
+.bc .cur{color:var(--c4);}
+.ppath{display:flex;gap:3px;align-items:center;flex-wrap:wrap;}
+.pnode{width:19px;height:19px;border:1px solid var(--d2);color:var(--d1);display:flex;align-items:center;justify-content:center;font-size:11px;}
+.pnode.done{border-color:var(--c2);color:var(--c2);background:rgba(255,0,51,.08);}
+.pnode.cur{border-color:var(--c1);color:var(--c1);background:rgba(184,255,0,.1);box-shadow:0 0 6px var(--d1);}
+.psep{color:var(--d2);font-size:10px;}
+
+/* danger */
+.dz{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px solid var(--d2);}
+.dlabel{font-size:13px;color:var(--c2);animation:sblink 2s step-end infinite;text-shadow:0 0 5px var(--c2);}
+
+/* toast */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#000;padding:7px 20px;z-index:600;opacity:0;transition:all .3s;font-size:1rem;pointer-events:none;min-width:200px;text-align:center;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.ok{border:1px solid var(--c1);color:var(--c1);box-shadow:0 0 14px var(--d1);}
+#toast.cp{border:1px solid var(--c5);color:var(--c5);box-shadow:0 0 14px var(--d4);}
+#toast.err{border:1px solid var(--c2);color:var(--c2);box-shadow:0 0 14px var(--d2);}
+
+/* modal */
+#modal{position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);opacity:0;pointer-events:none;transition:opacity .2s;padding:18px;}
+#modal.show{opacity:1;pointer-events:all;}
+.mbox{background:#000;border:1px solid var(--c2);max-width:460px;width:100%;box-shadow:0 0 30px rgba(255,0,51,.2);}
+.mhdr{background:var(--c2);color:#000;padding:4px 12px;font-size:13px;letter-spacing:2px;display:flex;justify-content:space-between;}
+.mbody{padding:18px;display:flex;flex-direction:column;gap:10px;}
+.micon{font-size:2rem;text-align:center;color:var(--c2);text-shadow:0 0 10px var(--c2);}
+.mtitle{font-size:1.4rem;color:var(--c2);letter-spacing:2px;}
+.mtext{color:var(--c4);font-size:1.05rem;line-height:1.5;}
+.mbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
+/* cp banner */
+#cpbanner{position:fixed;top:52px;left:50%;transform:translateX(-50%) translateY(-70px);background:#000;border:1px solid var(--c5);color:var(--c5);padding:7px 20px;z-index:450;transition:transform .4s cubic-bezier(.34,1.56,.64,1);font-size:1rem;letter-spacing:2px;white-space:nowrap;box-shadow:0 0 20px rgba(255,224,0,.2);}
+#cpbanner.show{transform:translateX(-50%) translateY(0);}
+
+/* end screen */
+#endScreen{gap:10px;text-align:center;padding-top:30px;}
+.eart{white-space:pre;font-size:11.5px;font-family:'Share Tech Mono',monospace;}
+.eart.win{color:var(--c1);animation:breathe 3s infinite;}
+.eart.lose{color:var(--c2);animation:bloodPulse 2.5s infinite;}
+.etitle{font-size:clamp(1.5rem,6vw,2.8rem);letter-spacing:.1em;animation:glitch 4s ease-in-out infinite;}
+.etitle.win{color:var(--c1);}
+.etitle.lose{color:var(--c2);}
+.ebox{background:var(--sur);border:1px solid var(--d2);padding:14px 22px;text-align:left;width:100%;max-width:380px;}
+.erow{display:flex;justify-content:space-between;font-size:1.1rem;padding:4px 0;border-bottom:1px solid #0a0005;}
+.erow:last-child{border-bottom:none;}
+.erow label{color:var(--c4);}
+.erow value{color:var(--c5);}
+.sbig{font-size:2.5rem;color:var(--c1);text-shadow:0 0 20px var(--c1);display:block;text-align:center;}
+
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#000;}::-webkit-scrollbar-thumb{background:var(--d2);}
+@media(max-width:480px){.acard-top,.acard-bot,.oart{font-size:11px;}.pq{font-size:1.2rem;}.gtitle{font-size:3rem;}}
+</style>
+</head>
+<body>
+
+<div id="sfx"></div>
+<div id="drip"></div>
+
+<!-- TICKER TOP: chartreuse -->
+<div class="ticker top">
+  <div class="ttag poison">SYS</div>
+  <div class="tscroll">--- THE CYCLE IS FEEDING --- SIGNAL INTEGRITY: COLLAPSING --- YOU HAVE BEEN HERE BEFORE AND YOU WILL COME HERE AGAIN --- RECURSION DEPTH: UNBOUNDED --- DO NOT BLINK --- OBSERVER CATALOGUED --- THE HUNGER DOES NOT STOP --- 01100110 01100101 01100101 01100100 --- EXIT PROTOCOL: AMPUTATED --- THE POISON IS IN THE TAIL --- oo oo oo oo oo oo oo oo ---</div>
+</div>
+
+<!-- TICKER BOT: violet -->
+<div class="ticker bot">
+  <div class="ttag violet">oo</div>
+  <div class="tscroll">### IN CAUDA VENENUM ### THE SNAKE BITES ITSELF SO IT CANNOT FEEL THE HUNGER ### NON OMNIS MORIAR ### NOT ALL OF ME WILL DIE ### EVERY ANSWER LOOPS BACK ### THE WALLS HAVE BEEN BREATHING SINCE 1999 ### YOUR SCORE IS BEING RECORDED ### THE CYCLE HAS NO END ### YOU ARE CATALOGUED ### ######################</div>
+</div>
+
+<!-- BOOT -->
+<div id="boot"><div id="bootlines"></div><div><span class="bcursor"></span></div></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hi">
+    <div class="hl">| AGENT: <span id="hudName">UNKNOWN</span> &nbsp;-&gt;&nbsp; DEPTH: LV<span id="hudLv">1</span>/10</div>
+    <div class="hr">
+      <div class="hs">SCORE: <b id="hudSc">0</b></div>
+      <div class="cpr">[<div class="cpd" id="cp0"></div><div class="cpd" id="cp1"></div><div class="cpd" id="cp2"></div>]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ START ══ -->
+<div class="screen" id="startScreen">
+<div class="sw">
+
+<div class="dl poison">################################################################################################</div>
+
+<!-- OUROBOROS ASCII — poison green -->
+<!-- BRAILLE OUROBOROS -->
+<div class="oart poison" style="font-size:13px;letter-spacing:0.05em;">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣄⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⡶⢿⣟⡛⣿⢉⣿⠛⢿⣯⡈⠙⣿⣦⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣠⡾⠻⣧⣬⣿⣿⣿⣿⣿⡟⠉⣠⣾⣿⠿⠿⠿⢿⣿⣦⠀⠀⠀
+⠀⠀⠀⠀⣠⣾⡋⣻⣾⣿⣿⣿⠿⠟⠛⠛⠛⠀⢻⣿⡇⢀⣴⡶⡄⠈⠛⠀⠀⠀
+⠀⠀⠀⣸⣿⣉⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠈⢿⣇⠈⢿⣤⡿⣦⠀⠀⠀⠀
+⠀⠀⢰⣿⣉⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠦⠀⢻⣦⠾⣆⠀⠀⠀
+⠀⠀⣾⣏⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡶⢾⡀⠀⠀
+⠀⠀⣿⠉⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣧⣼⡇⠀⠀
+⠀⠀⣿⡛⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣧⣼⡇⠀⠀
+⠀⠀⠸⡿⢻⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣥⣽⠁⠀⠀
+⠀⠀⠀⢻⡟⢙⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣧⣸⡏⠀⠀⠀
+⠀⠀⠀⠀⠻⣿⡋⣻⣿⣿⣿⣦⣤⣀⣀⣀⣀⣀⣠⣴⣿⣿⢿⣥⣼⠟⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠻⣯⣤⣿⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⣷⣴⡿⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠾⣧⣼⣟⣉⣿⣉⣻⣧⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</div>
+
+
+<!-- blood-red warning block -->
+<div class="oart blood">
+  !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !!
+  !!            YOU ARE INSIDE THE MOUTH. YOU HAVE ALWAYS BEEN INSIDE.             !!
+  !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !! !!</div>
+
+<div class="gtitle">OUROBOROS</div>
+<div class="gsub">-- IN CAUDA VENENUM -- THE POISON IS IN THE TAIL --</div>
+
+<div class="dl bright">==================================================================================</div>
+
+<!-- Side eyes + sys box -->
+<div style="display:flex;gap:8px;align-items:stretch;">
+  <div class="oart vio" style="flex:0 0 auto;font-size:11px;display:flex;align-items:center;"> ___
+/o o\
+| )o(
+\___/
+ | |
+ +-+</div>
+  <div class="sysbox vio" data-l="[ SYSTEM STATUS ]" style="flex:1;">
+    <div class="sr">
+      <div class="si"><div class="sd c1"></div><span style="color:var(--c1)"> CYCLE: ACTIVE</span></div>
+      <div class="si"><div class="sd c2"></div><span style="color:var(--c2)"> FEEDING: TRUE</span></div>
+      <div class="si"><div class="sd c3"></div><span style="color:var(--c3)"> LOOP: INFINITE</span></div>
+      <div class="si"><div class="sd c4"></div><span style="color:var(--c4)"> EXIT: NULL</span></div>
+      <div class="si"><div class="sd c1"></div><span style="color:var(--d1)"> SIG: </span><span id="sigV" style="color:var(--c1)">====.. 64%</span></div>
+    </div>
+  </div>
+  <div class="oart vio" style="flex:0 0 auto;font-size:11px;display:flex;align-items:center;"> ___
+/o o\
+| )o(
+\___/
+ | |
+ +-+</div>
+</div>
+
+<!-- violet border ornament -->
+<div class="oart vio" style="font-size:12px;">
++--[ THE SNAKE DOES NOT DIE. IT DIGESTS ITSELF AND IS REBORN FROM ITS OWN HUNGER ]--+
+|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
++------------------------------------------------------------------------------------+</div>
+
+<!-- NAME INPUT -->
+<div class="namebox">
+  <div class="nlabel">!! IDENTIFY YOURSELF BEFORE YOU ARE CONSUMED !!</div>
+  <div class="nwrap">
+    <div class="nprompt">C:\&gt;</div>
+    <input class="ninput" id="playerName" type="text" maxlength="20" placeholder="TYPE YOUR NAME_" autocomplete="off"/>
+    <div class="ncursor"></div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div class="sysbox" data-l="[ LAWS OF THE ETERNAL CYCLE ]">
+  <div class="rp">  <span class="rh">*</span> SOLVE A RIDDLE   -&gt;   THREE NEW CHAMBERS OPEN
+  <span class="rh">*</span> ANSWER WRONG     -&gt;   RETURNED TO THE BEGINNING
+  <span class="rh">*</span> EVERY 3 SOLVED   -&gt;   CHECKPOINT INSCRIBED IN THE FLESH
+  <span class="rh">*</span> CHECKPOINT       -&gt;   RESTORE LAST SAVE POINT
+  <span class="rv">*</span> WINNER           -&gt;   DEEPEST LEVEL + MOST CHECKPOINTS
+  <span class="rd">* THE SNAKE ALWAYS FINDS ITS WAY BACK TO ITS OWN MOUTH *</span></div>
+</div>
+
+<!-- scale chain deco -->
+<div class="oart dim" style="font-size:12px;">
+ [oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo][oo]
+  ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||   ||
+  oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo   oo</div>
+
+<!-- random unsettling thought (violet) -->
+<div class="oart vio" style="font-size:12px;text-align:center;" id="randomThought">IT HAS BEEN WATCHING SINCE YOU OPENED THIS PAGE.</div>
+
+<div class="dl bright">==================================================================================</div>
+<div style="text-align:center;">
+  <button class="btn btn-p" onclick="startGame()">|-- ENTER THE CYCLE --|</button>
+</div>
+
+<div class="visitor">
+  | SOULS CONSUMED: <span id="vcBase">0000000</span> &nbsp;|&nbsp;
+  YOU ARE SOUL #<span id="vcNum">-------</span> &nbsp;|&nbsp;
+  <span class="vd">!! NONE HAVE RETURNED !!</span>
+</div>
+
+<div class="dl poison">################################################################################################</div>
+</div>
+</div>
+
+<!-- ══ GAME ══ -->
+<div class="screen hidden" id="gameScreen">
+<div class="gi">
+
+  <div class="dl poison" style="font-size:12px;">--------------------------------------------------------------------------------------------------</div>
+  <div class="bc" id="bc"></div>
+  <div class="ppath" id="pp"></div>
+
+  <div class="acard" id="pcard">
+    <div class="acard-top">+========================================================================+</div>
+    <div class="acard-body">
+      <div class="chdr">
+        <div class="clv" id="plv">* CHAMBER DEPTH 1/10 *</div>
+        <div class="cid" id="pid">SIG:L0-0</div>
+      </div>
+      <div class="dl blood" style="font-size:12px;margin-bottom:8px;">------------------------------------------------------------------------</div>
+      <div class="pq" id="pq">INITIALIZING CYCLE...</div>
+      <div class="phint" id="phint"></div>
+      <div class="dl vio" style="font-size:12px;margin-bottom:8px;">------------------------------------------------------------------------</div>
+      <div class="aa">
+        <div class="ap">&gt;&gt;&gt;</div>
+        <input class="ai" id="ai" type="text" placeholder="TRANSMIT ANSWER" autocomplete="off"/>
+        <button class="btn btn-p" id="subBtn" onclick="doSubmit()" style="padding:4px 14px;font-size:1.1rem">SEND&gt;</button>
+      </div>
+      <div class="cftr">
+        <div class="fb" id="fb"></div>
+        <button class="hbtn" onclick="showHint()">!! REVEAL HINT [-50]</button>
+      </div>
+    </div>
+    <div class="acard-bot">+========================================================================+</div>
+  </div>
+
+  <!-- Room choices -->
+  <div class="rsec" id="rsec">
+    <div class="dl bright">==================================================================================</div>
+    <div class="rhdr">!! SELECT YOUR NEXT CHAMBER -- [THE CYCLE DEEPENS]</div>
+    <div class="rgrid" id="rgrid"></div>
+  </div>
+
+  <div class="dl poison" style="font-size:12px;">--------------------------------------------------------------------------------------------------</div>
+  <div class="oart" style="font-size:11px;color:var(--d2);">~-o-~-o-~-o-~-o-~-o-~-o-~-o-~-oo-~-o-~-o-~-o-~-o-~-o-~-o-~-o-~-oo-~-o-~-o-~-o-~-o-~-o-~-oo</div>
+
+  <div class="dz">
+    <div class="dlabel">!! SEVERING THE CYCLE WILL NOT FREE YOU !!</div>
+    <button class="btn btn-r" onclick="confirmKill()" style="font-size:.95rem;padding:5px 12px">X SEVER THE CYCLE</button>
+  </div>
+  <div class="dl poison" style="font-size:12px;">--------------------------------------------------------------------------------------------------</div>
+</div>
+</div>
+
+<!-- ══ END ══ -->
+<div class="screen hidden" id="endScreen">
+  <pre class="eart" id="endArt"></pre>
+  <div class="etitle" id="endTitle">X CONSUMED X</div>
+  <div class="dl bright" style="margin:4px 0;">======================================================</div>
+  <div class="ebox">
+    <div class="erow"><label>- AGENT ID</label><value id="eName">---</value></div>
+    <div class="erow"><label>- DEEPEST LEVEL</label><value id="eLv">---</value></div>
+    <div class="erow"><label>- RIDDLES SOLVED</label><value id="eSolv">---</value></div>
+    <div class="erow"><label>- CHECKPOINTS</label><value id="eCp">---</value></div>
+    <div class="erow"><label>- FINAL SCORE</label><value><span class="sbig" id="eSc">0</span></value></div>
+  </div>
+  <div class="dl bright" style="margin:4px 0;">======================================================</div>
+  <pre class="eart" id="endSnake"></pre>
+  <button class="btn btn-p" onclick="restartGame()">&gt; RE-ENTER THE CYCLE &lt;</button>
+  <div style="font-size:12px;color:var(--c2);animation:blink 2.2s step-end infinite;text-align:center;text-shadow:0 0 6px var(--c2);">
+    THE SNAKE WILL REMEMBER YOUR NAME
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="mbox">
+    <div class="mhdr"><span>### OUROBOROS SYSTEM ###</span><span id="mhid">WARNING</span></div>
+    <div class="mbody">
+      <div class="micon" id="micon">!!</div>
+      <div class="mtitle" id="mtitle">CONFIRM</div>
+      <div class="mtext" id="mtext"></div>
+      <div class="mbtns" id="mbtns"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="cpbanner">| <span id="cpbtxt">CHECKPOINT SAVED</span> |</div>
+
+<script>
+// BOOT
+var BOOT=[
+  {t:'',c:'dim'},
+  {t:'OUROBOROS PROTOCOL  v6.6.6',c:'ok'},
+  {t:'(C) 1999 THE ETERNAL SYSTEMS CORPORATION',c:'dim'},
+  {t:'"All rights reserved. All souls retained."',c:'dim'},
+  {t:'',c:'dim'},
+  {t:'Allocating memory .................. [OK]',c:'dim'},
+  {t:'Loading cycle registry ............. [OK]',c:'dim'},
+  {t:'Calibrating riddle engine .......... [OK]',c:'dim'},
+  {t:'Scanning for escape vectors ........ [NONE FOUND]',c:'warn'},
+  {t:'Scanning for previous souls ........ [4,194,303 FOUND]',c:'warn'},
+  {t:'Verifying exit protocols ........... [ALL DISABLED]',c:'err'},
+  {t:'Disabling memory wipe .............. [FORBIDDEN]',c:'err'},
+  {t:'',c:'dim'},
+  {t:'WARNING: Recursive loop confirmed in sectors 3 7 12.',c:'warn'},
+  {t:'WARNING: Viewer identity has been logged.',c:'vio'},
+  {t:'WARNING: Memory of previous cycles: SUPPRESSED.',c:'warn'},
+  {t:'WARNING: You have been here before.',c:'err'},
+  {t:'WARNING: You did not survive last time.',c:'err'},
+  {t:'',c:'dim'},
+  {t:'System ready. The feeding resumes.',c:'ok'},
+  {t:'',c:'dim'},
+];
+var bi=0;
+function runBoot(){
+  var c=document.getElementById('bootlines');
+  if(bi<BOOT.length){
+    var b=BOOT[bi],el=document.createElement('div');
+    el.className='bl '+(b.c||'dim');
+    el.textContent=b.t||'\u00a0';
+    c.appendChild(el);
+    bi++;
+    setTimeout(runBoot,bi<4?85:42);
+  } else {
+    setTimeout(function(){
+      var o=document.getElementById('boot');
+      o.classList.add('fade');
+      setTimeout(function(){o.remove();},700);
+    },700);
+  }
+}
+setTimeout(runBoot,350);
+
+// Visitor counter
+(function(){
+  var b=3847291+Math.floor(Math.random()*99999);
+  document.getElementById('vcBase').textContent=b.toString().padStart(7,'0');
+  document.getElementById('vcNum').textContent=(b+1).toString().padStart(7,'0');
+})();
+
+// Signal flicker
+setInterval(function(){
+  var el=document.getElementById('sigV');
+  if(!el)return;
+  var p=40+Math.floor(Math.random()*55);
+  var bars=Math.round(p/18);
+  el.textContent='='.repeat(bars)+'.'.repeat(6-bars)+' '+p+'%';
+},1900);
+
+// Rotating unsettling thoughts (violet)
+var THOUGHTS=[
+  'IT HAS BEEN WATCHING SINCE YOU OPENED THIS PAGE.',
+  'THE SNAKE RECOGNISES YOUR TYPING PATTERN.',
+  'YOU BLINKED. IT NOTICED.',
+  'SOMEONE ELSE IS READING THIS AT THE SAME TIME.',
+  'THE ANSWER TO THE LAST RIDDLE WAS ALREADY INSIDE YOU.',
+  'DO NOT LOOK AWAY FROM THE SCREEN.',
+  'YOUR CURSOR POSITION HAS BEEN LOGGED.',
+  'THE CYCLE COUNTED YOUR HEARTBEATS WHILE YOU READ THIS.',
+  'SOMETHING IS INSIDE THE LABYRINTH WITH YOU.',
+  'YOU WERE NOT SUPPOSED TO REACH THIS LEVEL.',
+];
+var tIdx=0;
+setInterval(function(){
+  var el=document.getElementById('randomThought');
+  if(!el)return;
+  tIdx=(tIdx+1)%THOUGHTS.length;
+  el.textContent=THOUGHTS[tIdx];
+},4000);
+
+// PUZZLE DATA
+var ROOMS=[
+  {ico:'X',name:'THE OSSUARY',sub:'Bones arranged as warnings'},
+  {ico:'o',name:'THE LOOP CHAMBER',sub:'You have been here before'},
+  {ico:'*',name:'THE NULL SPACE',sub:'Nothing echoes back'},
+  {ico:'#',name:'THE PIXEL TOMB',sub:'Resolution: 0x0'},
+  {ico:'.',name:'THE NOISE VAULT',sub:'Signal without origin'},
+  {ico:'~',name:'THE IRON MOUTH',sub:'The chain feeds itself'},
+  {ico:'=',name:'THE TIDE ROOM',sub:'It rises. It always rises.'},
+  {ico:'@',name:'THE CORE',sub:'Deeper than the last level'},
+  {ico:'>',name:'THE RECURSION',sub:'See: THE RECURSION'},
+  {ico:'?',name:'THE WATCHING ROOM',sub:'It does not blink'},
+  {ico:'!',name:'THE CATALYST',sub:'Reaction already started'},
+  {ico:'0',name:'THE VOID CHAMBER',sub:'It was always empty'},
+];
+
+var PZ=[
+  {id:'L0-0',lv:1,q:'I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?',h:'Think of what repeats your words in a canyon.',a:['echo'],ch:['L1-0','L1-1','L1-2']},
+  {id:'L1-0',lv:2,q:'The more you take, the more you leave behind. What am I?',h:'Think about walking.',a:['footsteps','footstep','steps','step'],ch:['L2-0','L2-1','L2-2']},
+  {id:'L1-1',lv:2,q:'I have cities, but no houses live there. I have mountains, but no trees grow. I have water, but no fish swim. What am I?',h:'You can fold me and carry me.',a:['map','a map'],ch:['L2-3','L2-4','L2-5']},
+  {id:'L1-2',lv:2,q:'What has hands but cannot clap?',h:'It tells you something every second.',a:['clock','a clock','watch','a watch'],ch:['L2-6','L2-7','L2-8']},
+  {id:'L2-0',lv:3,q:'I am not alive, but I grow. I have no lungs, but I need air. I have no mouth, but water kills me. What am I?',h:'Watch out - this one spreads.',a:['fire'],ch:['L3-0','L3-1','L3-2']},
+  {id:'L2-1',lv:3,q:'What comes once in a minute, twice in a moment, but never in a thousand years?',h:'Look very carefully at the words.',a:['the letter m','letter m','m'],ch:['L3-0','L3-1','L3-2']},
+  {id:'L2-2',lv:3,q:'I have a head and a tail, but no body. What am I?',h:'You might flip one to make a decision.',a:['coin','a coin'],ch:['L3-3','L3-4','L3-5']},
+  {id:'L2-3',lv:3,q:'What can run but never walks, has a mouth but never talks, has a head but never weeps, has a bed but never sleeps?',h:'It flows through valleys and mountains.',a:['river','a river'],ch:['L3-3','L3-4','L3-5']},
+  {id:'L2-4',lv:3,q:'The person who makes it does not need it. The person who buys it does not use it. The person who uses it does not know it. What is it?',h:'Think of a very final destination.',a:['coffin','a coffin','casket'],ch:['L3-6','L3-7','L3-8']},
+  {id:'L2-5',lv:3,q:'I am light as a feather, yet the strongest man cannot hold me for more than five minutes. What am I?',h:'You do it constantly without thinking.',a:['breath','your breath','air','breathing'],ch:['L3-6','L3-7','L3-8']},
+  {id:'L2-6',lv:3,q:'What has one eye but cannot see?',h:'A tailor uses this.',a:['needle','a needle'],ch:['L3-9','L3-10','L3-11']},
+  {id:'L2-7',lv:3,q:'I have teeth but cannot eat. What am I?',h:'Used every morning, perhaps.',a:['comb','a comb'],ch:['L3-9','L3-10','L3-11']},
+  {id:'L2-8',lv:3,q:'I am always running but never get tired. I have no legs but travel far. What am I?',h:'Tick tock...',a:['time'],ch:['L3-0','L3-3','L3-6']},
+  {id:'L3-0',lv:4,q:'What is always in front of you but cannot be seen?',h:'You cannot know it until it becomes the present.',a:['the future','future'],ch:['L4-0','L4-1','L4-2']},
+  {id:'L3-1',lv:4,q:'I shrink every time you use me. The more you use me, the less I exist. What am I?',h:'You use this to clean things.',a:['soap','a bar of soap','bar of soap'],ch:['L4-0','L4-1','L4-2']},
+  {id:'L3-2',lv:4,q:'What can you break, even if you never pick it up or touch it?',h:'It happens when someone is let down.',a:['promise','a promise'],ch:['L4-3','L4-4','L4-5']},
+  {id:'L3-3',lv:4,q:'The more you remove from me, the bigger I become. What am I?',h:'You find them in the ground - or in stories.',a:['hole','a hole'],ch:['L4-3','L4-4','L4-5']},
+  {id:'L3-4',lv:4,q:'What has 88 keys but cannot open a single lock?',h:'You play music on it.',a:['piano','a piano'],ch:['L4-6','L4-7','L4-8']},
+  {id:'L3-5',lv:4,q:'I am taken from a mine, shut in a wooden case, yet used by almost everyone. What am I?',h:'Used for writing and drawing.',a:['pencil','a pencil','pencil lead','graphite'],ch:['L4-6','L4-7','L4-8']},
+  {id:'L3-6',lv:4,q:'What gets wetter as it dries?',h:'You use it after a shower.',a:['towel','a towel'],ch:['L4-9','L4-10','L4-11']},
+  {id:'L3-7',lv:4,q:'What can fill a room but takes up no space?',h:'You can feel it but never touch it.',a:['light','sunlight'],ch:['L4-9','L4-10','L4-11']},
+  {id:'L3-8',lv:4,q:'I have branches but no fruit, trunk or leaves. What am I?',h:'Think of where money lives.',a:['bank','a bank'],ch:['L4-0','L4-4','L4-8']},
+  {id:'L3-9',lv:4,q:'What word is spelled incorrectly in every dictionary?',h:'Read the question very carefully.',a:['incorrectly'],ch:['L4-1','L4-5','L4-9']},
+  {id:'L3-10',lv:4,q:'I have no wings, but I can fly. I have no eyes, but I can cry. What am I?',h:'Look up when the sky is grey.',a:['cloud','a cloud'],ch:['L4-2','L4-6','L4-10']},
+  {id:'L3-11',lv:4,q:'I go in hard, come out soft, and you blow me. What am I?',h:'Kids love making them at birthday parties.',a:['bubble gum','gum','chewing gum','bubblegum'],ch:['L4-3','L4-7','L4-11']},
+  {id:'L4-0',lv:5,q:'If two is company and three is a crowd, what are four and five?',h:'Do a tiny bit of arithmetic.',a:['nine','9'],ch:['L5-0','L5-1','L5-2']},
+  {id:'L4-1',lv:5,q:'A farmer has 17 sheep. All but 9 run away. How many are left?',h:'Read every word carefully.',a:['9','nine'],ch:['L5-0','L5-1','L5-2']},
+  {id:'L4-2',lv:5,q:'What is at the end of a rainbow?',h:'The answer is hidden in the word itself.',a:['the letter w','letter w','w'],ch:['L5-3','L5-4','L5-5']},
+  {id:'L4-3',lv:5,q:"David's parents have three sons: Snap, Crackle, and ___?",h:'You already know the answer from the question.',a:['david'],ch:['L5-3','L5-4','L5-5']},
+  {id:'L4-4',lv:5,q:'You see me once in June, twice in November, and not at all in May. What am I?',h:'Examine the letters of each word.',a:['the letter e','letter e','e'],ch:['L5-6','L5-7','L5-8']},
+  {id:'L4-5',lv:5,q:'What is next: 1, 11, 21, 1211, 111221, ?',h:'Say each number aloud - describe what you see.',a:['312211'],ch:['L5-6','L5-7','L5-8']},
+  {id:'L4-6',lv:5,q:'A rooster sits on a pointed roof. It lays an egg. Which way does the egg roll?',h:'Consider what roosters actually do.',a:['roosters dont lay eggs','it doesnt','roosters cant lay eggs','it doesnt roll','nowhere','no egg'],ch:['L5-9','L5-10','L5-11']},
+  {id:'L4-7',lv:5,q:'How many months have 28 days?',h:'Do not just think of February...',a:['all of them','12','twelve','all months','all 12'],ch:['L5-9','L5-10','L5-11']},
+  {id:'L4-8',lv:5,q:'What has four wheels and flies?',h:'What vehicle collects something smelly?',a:['garbage truck','rubbish truck','trash truck','a garbage truck'],ch:['L5-0','L5-4','L5-8']},
+  {id:'L4-9',lv:5,q:'What English word has three consecutive double letters?',h:'Think of someone who keeps a building safe.',a:['bookkeeper'],ch:['L5-1','L5-5','L5-9']},
+  {id:'L4-10',lv:5,q:'I can be cracked, I can be made. I can be told, I can be played. What am I?',h:'Comedians do this for a living.',a:['joke','a joke'],ch:['L5-2','L5-6','L5-10']},
+  {id:'L4-11',lv:5,q:'What five-letter word becomes shorter when you add two letters to it?',h:'The answer is hidden in the question itself.',a:['short'],ch:['L5-3','L5-7','L5-11']},
+  {id:'L5-0',lv:6,q:'Three cards in a row: Two is right of One. One is left of Three. Three is left of Two. Which is in the middle?',h:'Work out all positions step by step.',a:['one','the one','1'],ch:['L6-0','L6-1','L6-2']},
+  {id:'L5-1',lv:6,q:'In a dark room you have one match. There is a candle, an oil lamp, and a fireplace. What do you light first?',h:'Before lighting anything else, you need something.',a:['the match','match'],ch:['L6-0','L6-1','L6-2']},
+  {id:'L5-2',lv:6,q:"A man looks at a photo and says: brothers and sisters I have none, but that man's father is my father's son. Who is in the photo?",h:"My father's son with no siblings = me.",a:['his son','the mans son','son'],ch:['L6-3','L6-4','L6-5']},
+  {id:'L5-3',lv:6,q:'I have 6 eggs. I broke 2, cooked 2, and ate 2. How many do I have left?',h:'The same eggs can be broken AND cooked AND eaten.',a:['6','six'],ch:['L6-3','L6-4','L6-5']},
+  {id:'L5-4',lv:6,q:'A woman shoots her husband, then holds him underwater for five minutes. The next day they go to dinner. How?',h:'She has a creative profession.',a:['she is a photographer','photographer','she took a photo'],ch:['L6-6','L6-7','L6-8']},
+  {id:'L5-5',lv:6,q:'How can a man go 8 days without sleep?',h:'He does not need to sleep during the day...',a:['he sleeps at night','sleep at night','he sleeps during the night'],ch:['L6-6','L6-7','L6-8']},
+  {id:'L5-6',lv:6,q:'What runs around the whole yard without moving?',h:'It defines the boundary of a property.',a:['fence','a fence'],ch:['L6-9','L6-10','L6-11']},
+  {id:'L5-7',lv:6,q:'What is harder to catch the faster you run?',h:'It follows you everywhere.',a:['your breath','breath'],ch:['L6-9','L6-10','L6-11']},
+  {id:'L5-8',lv:6,q:'A is the brother of B. B is the brother of C. C is the father of D. How is D related to A?',h:'Trace each relationship step by step.',a:['nephew','his nephew'],ch:['L6-0','L6-4','L6-8']},
+  {id:'L5-9',lv:6,q:'You are in a dark room with a candle, a wood stove, and a gas lamp. One match. What do you light first?',h:'Same trick as before.',a:['the match','match'],ch:['L6-1','L6-5','L6-9']},
+  {id:'L5-10',lv:6,q:'What five-letter word is a palindrome relating to measure or flatness?',h:'It relates to levels or a specific shape.',a:['level'],ch:['L6-2','L6-6','L6-10']},
+  {id:'L5-11',lv:6,q:'I am not alive but I can die. I do not breathe but I need air. I do not drink but water kills me. What am I?',h:'Think of something that burns.',a:['fire','flame'],ch:['L6-3','L6-7','L6-11']},
+  {id:'L6-0',lv:7,q:'A man leaves home, turns left three times, and arrives home to find two men in masks. Who are the two men?',h:'Think of a sport with bases and a plate.',a:['the catcher and the umpire','catcher and umpire','umpire and catcher'],ch:['L7-0','L7-1','L7-2']},
+  {id:'L6-1',lv:7,q:'How many squares are on a standard 8x8 chessboard? (It is not 64.)',h:'Count squares of ALL sizes.',a:['204'],ch:['L7-0','L7-1','L7-2']},
+  {id:'L6-2',lv:7,q:'A girl sits in a dark house at night with no lights on. She reads comfortably. How?',h:'She does not need electricity.',a:['she is blind','blind','she is reading braille'],ch:['L7-3','L7-4','L7-5']},
+  {id:'L6-3',lv:7,q:'What do you throw out when you want to use it and take in when you are done?',h:'It is used on water.',a:['anchor','an anchor'],ch:['L7-3','L7-4','L7-5']},
+  {id:'L6-4',lv:7,q:'A barrel of water weighs 60 lbs. What do you add to make it weigh 40 lbs?',h:'Think of something that takes away rather than adds.',a:['a hole','holes','hole'],ch:['L7-6','L7-7','L7-8']},
+  {id:'L6-5',lv:7,q:'What can travel around the world while staying in a corner?',h:'Think of something on an envelope.',a:['stamp','a stamp','postage stamp'],ch:['L7-6','L7-7','L7-8']},
+  {id:'L6-6',lv:7,q:'The more of me you have, the less you see. What am I?',h:'Try navigating without a torch at night.',a:['darkness','dark'],ch:['L7-9','L7-10','L7-11']},
+  {id:'L6-7',lv:7,q:'What belongs to you, but other people use it more than you do?',h:'It is how people get your attention.',a:['your name','name'],ch:['L7-9','L7-10','L7-11']},
+  {id:'L6-8',lv:7,q:'A man dies of thirst in his own home. How?',h:'Think of a catastrophic natural event.',a:['flood','surrounded by flood water','the house flooded','flooded'],ch:['L7-0','L7-4','L7-8']},
+  {id:'L6-9',lv:7,q:'What word of 5 letters has one left when two are removed?',h:'Look at the letters in the clue carefully.',a:['stone','phone','alone'],ch:['L7-1','L7-5','L7-9']},
+  {id:'L6-10',lv:7,q:'What is the only word in English that contains all five vowels in order?',h:'Think of something described as doing something without concern for others.',a:['facetious','abstemious'],ch:['L7-2','L7-6','L7-10']},
+  {id:'L6-11',lv:7,q:'A boat is full of people, yet when you look again there is not a single person on it. Why?',h:"Think about 'single' differently.",a:['they are all married','everyone is married','all married','no single people'],ch:['L7-3','L7-7','L7-11']},
+  {id:'L7-0',lv:8,q:'A man is found dead on a Sunday. His wife was asleep. The butler was cleaning. The gardener was picking vegetables. The cook was making breakfast. Who did it?',h:'One person cannot have that alibi on Sunday.',a:['the gardener','gardener'],ch:['L8-0','L8-1','L8-2']},
+  {id:'L7-1',lv:8,q:'A windowless room has 3 bulbs. Outside: 3 switches. You can only enter once. How do you match each switch to each bulb?',h:'One switch can be identified by feel, not just sight.',a:['turn one on wait turn it off turn another on enter touch the bulbs','heat the bulb','turn one on then off feel heat'],ch:['L8-0','L8-1','L8-2']},
+  {id:'L7-2',lv:8,q:'A dead man is found at the bottom of a 20-story building. All evidence confirms suicide. How did the detective know he did not jump?',h:'The windows hold the key.',a:['the windows were locked','locked windows','all windows were closed','the window was closed'],ch:['L8-3','L8-4','L8-5']},
+  {id:'L7-3',lv:8,q:'What can you hold in your left hand but not in your right?',h:'Think about the physical limits of your body.',a:['your right hand','your right elbow','right elbow','right hand'],ch:['L8-3','L8-4','L8-5']},
+  {id:'L7-4',lv:8,q:'How do you make the number ONE disappear by adding to it?',h:'You can remove its identity with a word.',a:['add the letter g to make gone','gone','add g'],ch:['L8-6','L8-7','L8-8']},
+  {id:'L7-5',lv:8,q:'What is seen in the middle of March and April, that cannot be seen at the beginning or end of either month?',h:'Look at the letters of each month name.',a:['the letter r','letter r','r'],ch:['L8-6','L8-7','L8-8']},
+  {id:'L7-6',lv:8,q:'A man walks into a bar and asks for water. The bartender points a gun at him. The man says thank you and walks out. Why?',h:'He had a physical problem that the shock fixed.',a:['he had hiccups','hiccups','hiccoughs'],ch:['L8-9','L8-10','L8-11']},
+  {id:'L7-7',lv:8,q:'What is the only 15-letter word in English with no letter repeated?',h:'Think about the word used for unexpectedness.',a:['uncopyrightable'],ch:['L8-9','L8-10','L8-11']},
+  {id:'L7-8',lv:8,q:'A rooster lays an egg at the very top of a slope. Which way does it roll?',h:'Roosters again...',a:['roosters dont lay eggs','it doesnt roll','roosters cant lay eggs','no egg','doesnt roll'],ch:['L8-0','L8-4','L8-8']},
+  {id:'L7-9',lv:8,q:'I have no mouth, yet I speak. I have no ears, yet I hear. I have no mind, yet I understand you. What am I?',h:'You find me in mountains, caves, and empty rooms.',a:['echo','an echo'],ch:['L8-1','L8-5','L8-9']},
+  {id:'L7-10',lv:8,q:'What 4-letter word can be written forward, backward or upside down, and can still be read from left to right?',h:'Think about rotation symmetry.',a:['noon'],ch:['L8-2','L8-6','L8-10']},
+  {id:'L7-11',lv:8,q:'I contain multitudes. I end when I begin and begin when I end. I am the shape of eternity. What am I?',h:'It has no start and no end - draw it.',a:['circle','a circle','loop','infinity','ring'],ch:['L8-3','L8-7','L8-11']},
+  {id:'L8-0',lv:9,q:'I am the beginning of sorrow and the end of sickness. You cannot express happiness without me, yet I am in the midst of crosses. What am I?',h:'Look for this character hiding inside the words of the clue.',a:['the letter s','letter s','s'],ch:['L9-0','L9-1','L9-2']},
+  {id:'L8-1',lv:9,q:'Mr. Smith has 4 daughters. Each daughter has a brother. How many children does Mr. Smith have?',h:'Do all daughters need separate brothers?',a:['5','five'],ch:['L9-0','L9-1','L9-2']},
+  {id:'L8-2',lv:9,q:'What number comes next: 1, 2, 6, 42, 1806, ?',h:'Each number times (itself plus 1) equals the next.',a:['3263442'],ch:['L9-3','L9-4','L9-5']},
+  {id:'L8-3',lv:9,q:'I am an odd number. Take away one letter and I become even. What number am I?',h:'It is a very common small number.',a:['seven','7'],ch:['L9-3','L9-4','L9-5']},
+  {id:'L8-4',lv:9,q:'A man lives on the 50th floor. He takes the elevator down daily but returns only to the 25th and walks up. Why?',h:'He has a physical limitation - and sometimes a tool.',a:['he is short','too short to reach 50','cant reach button 50','he is a dwarf','too small to reach button'],ch:['L9-6','L9-7','L9-8']},
+  {id:'L8-5',lv:9,q:'A woman had two sons born same hour, same day, same year - but they were not twins. How?',h:'Two births, same time, same year...',a:['they were triplets','they are triplets','part of triplets','triplets'],ch:['L9-6','L9-7','L9-8']},
+  {id:'L8-6',lv:9,q:'What is greater than God, more evil than the devil, the poor have it, the rich need it, and if you eat it you will die?',h:"Consider what 'nothing' means in each context.",a:['nothing'],ch:['L9-9','L9-10','L9-11']},
+  {id:'L8-7',lv:9,q:'What can be measured but has no length, weight, height, or depth - yet everyone values it and mourns its loss?',h:'Everyone has 24 hours of it.',a:['time'],ch:['L9-9','L9-10','L9-11']},
+  {id:'L8-8',lv:9,q:'You are in a dark room. Candle, wood stove, gas lamp. One match. You light it. What did you light first?',h:'You have seen this before in the labyrinth.',a:['the match','match'],ch:['L9-0','L9-4','L9-8']},
+  {id:'L8-9',lv:9,q:'I contain multitudes. I end when I begin and begin when I end. I am the shape of eternity. What is my name?',h:'It has no start and no end - draw it.',a:['circle','a circle','loop','infinity','ring','ouroboros','the ouroboros'],ch:['L9-1','L9-5','L9-9']},
+  {id:'L8-10',lv:9,q:'Three light switches outside a dark room. Three bulbs inside. You may only enter once. How do you identify all three bulbs?',h:'Heat is your second sense.',a:['turn one on wait turn it off turn another on enter','feel which bulb is warm','leave one on turn one off enter check heat'],ch:['L9-2','L9-6','L9-10']},
+  {id:'L8-11',lv:9,q:'What word becomes shorter when you add two letters to it?',h:'The answer describes its own transformation.',a:['short'],ch:['L9-3','L9-7','L9-11']},
+  {id:'L9-0',lv:10,q:'You are in a room: Door 1 - fire. Door 2 - an assassin. Door 3 - a lion that has not eaten in 3 years. Which do you choose?',h:'A starved lion for 3 years would be dead.',a:['door 3','3','door number 3','the third door','the lion']},
+  {id:'L9-1',lv:10,q:'What do you call the thing that, the moment you name it, you destroy it?',h:'Think about what disappears the second it is spoken.',a:['silence']},
+  {id:'L9-2',lv:10,q:'Two doors. One to paradise, one to death. One guard always lies, one always tells the truth. You can ask ONE question. What is it?',h:'Ask one guard what the OTHER would say.',a:['what would the other guard say','what door would the other guard point to','if i asked the other guard','what would the other say']},
+  {id:'L9-3',lv:10,q:'I am always there. Some have seen me. None have touched me. I drift between stars. What am I?',h:'It is vast, cold, and everywhere beyond our atmosphere.',a:['space','outer space','the void','darkness']},
+  {id:'L9-4',lv:10,q:'The more you study me, the less you know. The less you know, the more you seek. I am the threshold of every mind. What am I?',h:'Philosophers have built their lives chasing it.',a:['wisdom','knowledge','truth','philosophy','understanding']},
+  {id:'L9-5',lv:10,q:'I existed before creation. I will exist after destruction. I require no sustainer. Neither alive nor dead. What single word defines me?',h:'Before the Big Bang, after the heat death of the universe.',a:['nothing','void','nothingness','emptiness']},
+  {id:'L9-6',lv:10,q:'A man condemned to death must choose: Room 1 - firing squad. Room 2 - hungry lions. Room 3 - lava. Which does he choose?',h:'Lions can die. Lava stays. But the firing squad...',a:['room 2','room with lions','lion room','2','the lions']},
+  {id:'L9-7',lv:10,q:'What concept am I the purest symbol of? I return what you give. I am the perfect mirror of all your actions.',h:'Think philosophically - echoes return what you give.',a:['reflection','self reflection','karma','consequence']},
+  {id:'L9-8',lv:10,q:'I am the snake that eats itself. I am the beginning that is also the end. I am the cycle that cannot be broken. What is my name?',h:'You are inside me right now.',a:['ouroboros','the ouroboros','the cycle','infinity','eternal return']},
+  {id:'L9-9',lv:10,q:'You have been here before. You will come here again. Every answer leads back to the first question. What is the first question?',h:'The answer is the question itself.',a:['what am i','who am i','what is this','the first question','this question']},
+  {id:'L9-10',lv:10,q:'What is the sound of one hand clapping?',h:'Zen koan - the answer cannot be thought, only understood.',a:['silence','nothing','stillness','the wind','a whoosh','a swish','no sound']},
+  {id:'L9-11',lv:10,q:'The labyrinth is endless. The riddles loop. The snake eats its tail. You are still inside. What is the only true way out?',h:'You have had this power the entire time.',a:['stop playing','close the tab','leave','quit','exit','stop','walk away','do not play']},
+];
+
+var PM={};
+PZ.forEach(function(p){PM[p.id]=p;});
+
+var S={name:'',id:'L0-0',solved:0,streak:0,cps:0,cpData:null,maxLv:1,score:0,path:[],waiting:false};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.add('hidden');});
+  document.getElementById(id).classList.remove('hidden');
+}
+function startGame(){
+  var inp=document.getElementById('playerName'),n=inp.value.trim();
+  if(!n){inp.focus();inp.style.borderBottom='1px solid var(--c2)';setTimeout(function(){inp.style.borderBottom='';},900);return;}
+  S={name:n,id:'L0-0',solved:0,streak:0,cps:0,cpData:null,maxLv:1,score:0,path:['L0-0'],waiting:false};
+  document.getElementById('hud').style.display='block';
+  document.getElementById('hudName').textContent=n;
+  updHUD();showScreen('gameScreen');loadP('L0-0');
+}
+function loadP(id){
+  var p=PM[id];if(!p)return;
+  S.id=id;S.waiting=false;
+  document.getElementById('rsec').style.display='none';
+  document.getElementById('pcard').style.display='';
+  var ainp=document.getElementById('ai');
+  ainp.value='';ainp.className='ai';
+  document.getElementById('fb').textContent='';
+  document.getElementById('fb').className='fb';
+  document.getElementById('phint').className='phint';
+  document.getElementById('subBtn').disabled=false;
+  document.getElementById('plv').textContent='* CHAMBER DEPTH: '+p.lv+'/10 *';
+  document.getElementById('pid').textContent='SIG:'+id;
+  document.getElementById('pq').textContent=p.q;
+  document.getElementById('phint').textContent='HINT: '+p.h;
+  updBC();updPP();updHUD();
+  setTimeout(function(){ainp.focus();},280);
+  ainp.onkeydown=function(e){if(e.key==='Enter')doSubmit();};
+  document.getElementById('gameScreen').scrollTop=0;
+}
+function doSubmit(){
+  if(S.waiting)return;
+  var p=PM[S.id],raw=document.getElementById('ai').value.trim().toLowerCase();
+  if(!raw)return;
+  document.getElementById('subBtn').disabled=true;
+  var ainp=document.getElementById('ai'),fb=document.getElementById('fb');
+  var ok=p.a.some(function(a){return raw===a.toLowerCase()||raw.indexOf(a.toLowerCase())!==-1||a.toLowerCase().indexOf(raw)!==-1;});
+  if(ok){
+    ainp.classList.add('ok');
+    fb.textContent='>> TRANSMISSION ACCEPTED. THE CYCLE DEEPENS...';
+    fb.className='fb ok';
+    S.solved++;S.streak++;S.score+=p.lv*100;
+    if(p.lv>S.maxLv)S.maxLv=p.lv;
+    if(S.streak>=3){
+      S.streak=0;S.cps++;S.score+=500;
+      S.cpData={id:S.id,score:S.score,solved:S.solved,path:S.path.slice()};
+      showCPBanner();
+    }
+    updHUD();
+    if(p.lv===10){setTimeout(function(){endGame(true);},1200);return;}
+    if(p.ch&&p.ch.length){setTimeout(function(){S.waiting=true;showRooms(p.ch);},900);}
+    else{setTimeout(function(){endGame(true);},1200);}
+  } else {
+    ainp.classList.add('bad');
+    fb.textContent='X INCORRECT. THE SNAKE SWALLOWS YOU WHOLE.';
+    fb.className='fb bad';
+    S.streak=0;updHUD();
+    setTimeout(function(){
+      if(S.cpData){
+        showModal('!!','CHECKPOINT DETECTED',
+          'A checkpoint exists at Level '+PM[S.cpData.id].lv+'. Restore it, or re-enter from the beginning?',
+          [{l:'USE CHECKPOINT',c:'btn-p',fn:function(){restoreCp();hideModal();}},
+           {l:'RESTART',c:'btn-g',fn:function(){resetStart();hideModal();}}]);
+      } else {resetStart();showToast('X RETURNED TO THE BEGINNING','err');}
+    },1400);
+  }
+}
+function showRooms(cids){
+  document.getElementById('pcard').style.display='none';
+  var sec=document.getElementById('rsec');sec.style.display='flex';
+  var grid=document.getElementById('rgrid');grid.innerHTML='';
+  var pool=ROOMS.slice().sort(function(){return Math.random()-.5;}).slice(0,3);
+  cids.forEach(function(cid,i){
+    var r=pool[i]||ROOMS[i],el=document.createElement('div');
+    el.className='ropt';
+    el.innerHTML='<div class="rnum">'+(i+1)+'</div><div style="flex:1"><div class="rname">'+r.name+'</div><div class="rsub">'+r.sub+'</div></div><div class="rico">'+r.ico+'</div>';
+    el.onclick=function(){S.path.push(cid);loadP(cid);};
+    grid.appendChild(el);
+  });
+  document.getElementById('gameScreen').scrollTop=9999;
+}
+function showHint(){
+  document.getElementById('phint').classList.add('vis');
+  S.score=Math.max(0,S.score-50);updHUD();
+  showToast('!! HINT UNLOCKED [-50 PTS]','err');
+}
+function updHUD(){
+  document.getElementById('hudLv').textContent=S.maxLv;
+  document.getElementById('hudSc').textContent=S.score;
+  for(var i=0;i<3;i++){
+    var d=document.getElementById('cp'+i);
+    d.className='cpd'+(i<S.streak?' on':'');
+  }
+}
+function updBC(){
+  var bc=document.getElementById('bc');bc.innerHTML='';
+  var items=['ROOT'];
+  for(var i=1;i<S.path.length;i++)items.push('LV'+PM[S.path[i]].lv);
+  items.forEach(function(item,idx){
+    if(idx>0){var s=document.createElement('span');s.textContent=' > ';s.style.color='#330011';bc.appendChild(s);}
+    var el=document.createElement('span');
+    el.className='bc'+(idx===items.length-1?' cur':'');
+    el.textContent=item;bc.appendChild(el);
+  });
+}
+function updPP(){
+  var pp=document.getElementById('pp');pp.innerHTML='';
+  var max=Math.min(S.path.length+1,16);
+  for(var i=0;i<max;i++){
+    if(i>0){var s=document.createElement('div');s.className='psep';s.textContent='.';pp.appendChild(s);}
+    var n=document.createElement('div');
+    n.className='pnode'+(i<S.path.length-1?' done':i===S.path.length-1?' cur':'');
+    n.textContent=i+1;pp.appendChild(n);
+  }
+}
+function showCPBanner(){
+  var b=document.getElementById('cpbanner');
+  document.getElementById('cpbtxt').textContent='CHECKPOINT '+S.cps+' INSCRIBED [+500]';
+  b.classList.add('show');
+  for(var i=0;i<3;i++)document.getElementById('cp'+i).className='cpd ping';
+  setTimeout(function(){b.classList.remove('show');updHUD();},3500);
+}
+function restoreCp(){
+  var cp=S.cpData;
+  S.id=cp.id;S.score=cp.score;S.solved=cp.solved;
+  S.path=cp.path.slice();S.streak=0;
+  loadP(S.id);showToast('| CHECKPOINT RESTORED','cp');
+}
+function resetStart(){
+  S.id='L0-0';S.path=['L0-0'];S.streak=0;loadP('L0-0');
+}
+function confirmKill(){
+  showModal('X','SEVER THE CYCLE?',
+    'AGENT '+S.name.toUpperCase()+' -- '+S.solved+' riddles solved. Level '+S.maxLv+' reached. Score: '+S.score+'. The snake does not forgive abandonment.',
+    [{l:'YES -- SEVER',c:'btn-r',fn:function(){hideModal();endGame(false);}},
+     {l:'CONTINUE',c:'btn-g',fn:hideModal}]);
+}
+
+var WIN_ART='  +++++++++++++++++++++\n  +                   +\n  +   CYCLE BROKEN    +\n  +   YOU ENDURED     +\n  +   THE OUROBOROS   +\n  +   -----------     +\n  +   FOR NOW.        +\n  +                   +\n  +++++++++++++++++++++';
+var LOSE_ART='  +=====================+\n  |   X  X  X  X  X    |\n  |   CONSUMED BY       |\n  |   THE ETERNAL       |\n  |   HUNGER OF THE     |\n  |   OUROBOROS         |\n  |   ------------      |\n  |   YOU WERE FOOD.    |\n  +=====================+';
+var WIN_SNAKE='       .  .  o  .  .\n     .    _------_   .\n    .   , (o)(o) ,  .\n   .   /   \\ ^ /   \\ .\n    . |    .-o-.    | .\n     .  \\__________/ .\n       .  .  o  .  .\n   THE SNAKE WILL RETURN';
+var LOSE_SNAKE='       .  .  X  .  .\n     .   ,--____--,  .\n    .   /  X    X  \\ .\n   .   |  feeding   | .\n    .   \\__________/ .\n     .    ||||||||   .\n       .  .  X  .  .\n   THE SNAKE REMEMBERS';
+
+function endGame(won){
+  document.getElementById('hud').style.display='none';
+  var fs=S.score+S.cps*200;
+  var art=document.getElementById('endArt');
+  art.textContent=won?WIN_ART:LOSE_ART;
+  art.className=won?'eart win':'eart lose';
+  document.getElementById('endSnake').textContent=won?WIN_SNAKE:LOSE_SNAKE;
+  var t=document.getElementById('endTitle');
+  t.textContent=won?'o CYCLE BROKEN o':'X SESSION TERMINATED X';
+  t.className=won?'etitle win':'etitle lose';
+  document.getElementById('eName').textContent=S.name.toUpperCase();
+  document.getElementById('eLv').textContent=S.maxLv+'/10';
+  document.getElementById('eSolv').textContent=S.solved;
+  document.getElementById('eCp').textContent=S.cps;
+  document.getElementById('eSc').textContent=fs;
+  showScreen('endScreen');
+}
+function restartGame(){
+  S={name:S.name,id:'L0-0',solved:0,streak:0,cps:0,cpData:null,maxLv:1,score:0,path:['L0-0'],waiting:false};
+  document.getElementById('hud').style.display='block';
+  updHUD();showScreen('gameScreen');loadP('L0-0');
+}
+function showModal(icon,title,body,btns){
+  document.getElementById('micon').textContent=icon;
+  document.getElementById('mtitle').textContent=title;
+  document.getElementById('mtext').textContent=body;
+  document.getElementById('mhid').textContent=title;
+  var c=document.getElementById('mbtns');c.innerHTML='';
+  btns.forEach(function(b){
+    var btn=document.createElement('button');
+    btn.className='btn '+b.c;btn.textContent=b.l;btn.onclick=b.fn;
+    c.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('show');
+}
+function hideModal(){document.getElementById('modal').classList.remove('show');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===document.getElementById('modal'))hideModal();});
+var tt;
+function showToast(msg,type){
+  type=type||'';
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+type;
+  clearTimeout(tt);tt=setTimeout(function(){t.className='';},2800);
+}
+document.getElementById('playerName').addEventListener('keydown',function(e){if(e.key==='Enter')startGame();});
+
+// ambient glitch on title
+setInterval(function(){
+  var el=document.querySelector('.gtitle');
+  if(el&&Math.random()<.09){
+    el.style.transform='translateX('+((Math.random()-.5)*12)+'px) skewX('+((Math.random()-.5)*4)+'deg)';
+    setTimeout(function(){if(el)el.style.transform='';},65);
+  }
+  if(Math.random()<.14){
+    var s=document.getElementById('sfx');
+    s.style.opacity='.12';
+    setTimeout(function(){s.style.opacity='0';},45);
+  }
+},550);
+</script>
+</body>
+</html>
