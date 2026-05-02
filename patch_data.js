@@ -4,17 +4,23 @@ const path = require('path');
 const puzzlesPath = path.join(__dirname, 'client', 'src', 'parsed_puzzles.json');
 const dataPath = path.join(__dirname, 'client', 'src', 'data.js');
 
-const puzzles = JSON.parse(fs.readFileSync(puzzlesPath, 'utf-8'));
+let puzzles = JSON.parse(fs.readFileSync(puzzlesPath, 'utf-8'));
 
-// FIX: Automatically assign progressive levels so the game doesn't crash/end instantly
-// because the user set all puzzles to 'lv: 1'.
-let currentLv = 1;
+const firstPuzzle = puzzles.find(p => p.id === 'L0-0');
+let otherPuzzles = puzzles.filter(p => p.id !== 'L0-0');
+
+// Shuffle the other puzzles randomly
+otherPuzzles.sort(() => Math.random() - 0.5);
+
+// Reassemble with L0-0 at the start
+puzzles = [firstPuzzle, ...otherPuzzles];
+
+// Assign progressive levels to the randomized puzzles
 puzzles.forEach((p, idx) => {
-  if (p.id === 'L0-0') {
+  if (p && p.id === 'L0-0') {
     p.lv = 0;
-  } else {
-    // Distribute 100 puzzles across 60 levels
-    p.lv = Math.min(60, Math.ceil((idx + 1) / (puzzles.length / 60)));
+  } else if (p) {
+    p.lv = Math.min(60, Math.ceil(idx / ((puzzles.length - 1) / 60)));
   }
 });
 
