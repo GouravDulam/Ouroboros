@@ -63,7 +63,7 @@ export const PZ=[
   },
   {
     "id": "PZ-2",
-    "lv": 1,
+    "lv": 2,
     "q": "A VISION IN THE BLOOD: WHAT LETTER COMES AFTER B?",
     "h": "A, B, ... WHAT COMES NEXT?",
     "a": [
@@ -73,7 +73,7 @@ export const PZ=[
   },
   {
     "id": "PZ-3",
-    "lv": 1,
+    "lv": 2,
     "q": "CARVED IN BONE: WHAT LETTER COMES AFTER D?",
     "h": "A B C D ... WHAT COMES NEXT?",
     "a": [
@@ -83,7 +83,7 @@ export const PZ=[
   },
   {
     "id": "PZ-4",
-    "lv": 1,
+    "lv": 3,
     "q": "THE SCALES SHIFT: WHAT LETTER COMES AFTER F?",
     "h": "... E F ... WHAT IS NEXT?",
     "a": [
@@ -93,7 +93,7 @@ export const PZ=[
   },
   {
     "id": "PZ-5",
-    "lv": 1,
+    "lv": 3,
     "q": "A VISION IN THE BLOOD: WHAT LETTER COMES AFTER H?",
     "h": "G H ... WHAT COMES NEXT?",
     "a": [
@@ -103,7 +103,7 @@ export const PZ=[
   },
   {
     "id": "PZ-6",
-    "lv": 1,
+    "lv": 4,
     "q": "A VOICE FROM THE DARKNESS: WHAT LETTER COMES AFTER J?",
     "h": "I J ... WHAT COMES NEXT?",
     "a": [
@@ -113,7 +113,7 @@ export const PZ=[
   },
   {
     "id": "PZ-7",
-    "lv": 1,
+    "lv": 5,
     "q": "CARVED IN BONE: WHAT LETTER COMES AFTER L?",
     "h": "K L ... WHAT COMES NEXT?",
     "a": [
@@ -123,7 +123,7 @@ export const PZ=[
   },
   {
     "id": "PZ-8",
-    "lv": 1,
+    "lv": 5,
     "q": "A VISION IN THE BLOOD: WHAT LETTER COMES AFTER M?",
     "h": "L M ... WHAT COMES NEXT?",
     "a": [
@@ -133,7 +133,7 @@ export const PZ=[
   },
   {
     "id": "PZ-9",
-    "lv": 1,
+    "lv": 6,
     "q": "THE SERPENT WHISPERS: WHAT LETTER COMES AFTER N?",
     "h": "M N ... WHAT COMES NEXT?",
     "a": [
@@ -143,7 +143,7 @@ export const PZ=[
   },
   {
     "id": "PZ-10",
-    "lv": 1,
+    "lv": 6,
     "q": "THE CYCLE DEMANDS: WHAT LETTER COMES AFTER O?",
     "h": "N O ... WHAT COMES NEXT?",
     "a": [
@@ -153,7 +153,7 @@ export const PZ=[
   },
   {
     "id": "PZ-11",
-    "lv": 1,
+    "lv": 7,
     "q": "THE SERPENT WHISPERS: WHAT LETTER COMES AFTER P?",
     "h": "O P ... WHAT COMES NEXT?",
     "a": [
@@ -163,7 +163,7 @@ export const PZ=[
   },
   {
     "id": "PZ-12",
-    "lv": 1,
+    "lv": 8,
     "q": "THE CYCLE DEMANDS: WHAT LETTER COMES AFTER Q?",
     "h": "P Q ... WHAT COMES NEXT?",
     "a": [
@@ -173,7 +173,7 @@ export const PZ=[
   },
   {
     "id": "PZ-13",
-    "lv": 1,
+    "lv": 8,
     "q": "A VISION IN THE BLOOD: WHAT LETTER COMES AFTER S?",
     "h": "R S ... WHAT COMES NEXT?",
     "a": [
@@ -183,7 +183,7 @@ export const PZ=[
   },
   {
     "id": "PZ-14",
-    "lv": 1,
+    "lv": 9,
     "q": "THE SERPENT WHISPERS: WHAT LETTER COMES AFTER T?",
     "h": "S T ... WHAT COMES NEXT?",
     "a": [
@@ -193,7 +193,7 @@ export const PZ=[
   },
   {
     "id": "PZ-15",
-    "lv": 1,
+    "lv": 9,
     "q": "THE SCALES SHIFT: WHAT LETTER COMES AFTER W?",
     "h": "V W ... WHAT COMES NEXT?",
     "a": [
@@ -203,7 +203,7 @@ export const PZ=[
   },
   {
     "id": "PZ-16",
-    "lv": 1,
+    "lv": 10,
     "q": "THE SERPENT WHISPERS: WHAT LETTER COMES AFTER X?",
     "h": "W X ... WHAT COMES NEXT?",
     "a": [
@@ -213,7 +213,7 @@ export const PZ=[
   },
   {
     "id": "PZ-17",
-    "lv": 1,
+    "lv": 11,
     "q": "CARVED IN BONE: WHAT IS THE LAST LETTER OF THE ALPHABET?",
     "h": "A B C ... ALL THE WAY TO THE END",
     "a": [
@@ -223,7 +223,7 @@ export const PZ=[
   },
   {
     "id": "PZ-18",
-    "lv": 1,
+    "lv": 11,
     "q": "A GLITCH IN THE FLESH: WHAT IS THE FIRST LETTER OF THE ALPHABET?",
     "h": "THE VERY BEGINNING OF THE ABC SONG",
     "a": [
@@ -233,7 +233,7 @@ export const PZ=[
   },
   {
     "id": "PZ-19",
-    "lv": 1,
+    "lv": 12,
     "q": "CARVED IN BONE: HOW MANY LETTERS ARE IN THE ALPHABET?",
     "h": "COUNT ALL THE LETTERS FROM A TO Z",
     "a": [
@@ -243,7 +243,7 @@ export const PZ=[
   },
   {
     "id": "PZ-20",
-    "lv": 1,
+    "lv": 12,
     "q": "A GLITCH IN THE FLESH: WHAT ARE THE 5 VOWELS?",
     "h": "THEY ARE THE SINGING LETTERS — A, ?, ?, ?, ?",
     "a": [
@@ -253,7 +253,7 @@ export const PZ=[
   },
   {
     "id": "PZ-21",
-    "lv": 1,
+    "lv": 13,
     "q": "THE CYCLE DEMANDS: IS THE LETTER B A VOWEL OR CONSONANT?",
     "h": "VOWELS ARE ONLY A E I O U",
     "a": [
@@ -263,7 +263,7 @@ export const PZ=[
   },
   {
     "id": "PZ-22",
-    "lv": 1,
+    "lv": 14,
     "q": "THE SCALES SHIFT: IS THE LETTER E A VOWEL OR CONSONANT?",
     "h": "VOWELS ARE A E I O U",
     "a": [
@@ -273,7 +273,7 @@ export const PZ=[
   },
   {
     "id": "PZ-23",
-    "lv": 1,
+    "lv": 14,
     "q": "A GLITCH IN THE FLESH: WHAT IS 1 + 1?",
     "h": "ONE APPLE PLUS ONE MORE APPLE",
     "a": [
@@ -283,7 +283,7 @@ export const PZ=[
   },
   {
     "id": "PZ-24",
-    "lv": 1,
+    "lv": 15,
     "q": "THE CYCLE DEMANDS: WHAT IS 2 + 2?",
     "h": "TWO FINGERS PLUS TWO MORE FINGERS",
     "a": [
@@ -293,7 +293,7 @@ export const PZ=[
   },
   {
     "id": "PZ-25",
-    "lv": 1,
+    "lv": 15,
     "q": "THE SERPENT WHISPERS: WHAT IS 3 + 3?",
     "h": "THREE STARS PLUS THREE MORE STARS",
     "a": [
@@ -303,7 +303,7 @@ export const PZ=[
   },
   {
     "id": "PZ-26",
-    "lv": 1,
+    "lv": 16,
     "q": "A VISION IN THE BLOOD: WHAT IS 4 + 4?",
     "h": "FOUR PLUS FOUR",
     "a": [
@@ -313,7 +313,7 @@ export const PZ=[
   },
   {
     "id": "PZ-27",
-    "lv": 1,
+    "lv": 17,
     "q": "A GLITCH IN THE FLESH: WHAT IS 5 + 5?",
     "h": "ALL THE FINGERS ON ONE HAND PLUS ALL ON THE OTHER",
     "a": [
@@ -323,7 +323,7 @@ export const PZ=[
   },
   {
     "id": "PZ-28",
-    "lv": 1,
+    "lv": 17,
     "q": "A VISION IN THE BLOOD: WHAT IS 6 + 4?",
     "h": "SIX PLUS FOUR — COUNT ON YOUR FINGERS",
     "a": [
@@ -333,7 +333,7 @@ export const PZ=[
   },
   {
     "id": "PZ-29",
-    "lv": 1,
+    "lv": 18,
     "q": "THE SERPENT WHISPERS: WHAT IS 7 + 3?",
     "h": "SEVEN PLUS THREE",
     "a": [
@@ -343,7 +343,7 @@ export const PZ=[
   },
   {
     "id": "PZ-30",
-    "lv": 1,
+    "lv": 18,
     "q": "THE SERPENT WHISPERS: WHAT IS 2 + 3?",
     "h": "TWO BALLOONS PLUS THREE MORE BALLOONS",
     "a": [
@@ -353,7 +353,7 @@ export const PZ=[
   },
   {
     "id": "PZ-31",
-    "lv": 1,
+    "lv": 19,
     "q": "A VISION IN THE BLOOD: WHAT IS 1 + 4?",
     "h": "ONE COOKIE PLUS FOUR COOKIES",
     "a": [
@@ -363,7 +363,7 @@ export const PZ=[
   },
   {
     "id": "PZ-32",
-    "lv": 1,
+    "lv": 20,
     "q": "A GLITCH IN THE FLESH: WHAT IS 8 + 2?",
     "h": "EIGHT PLUS TWO",
     "a": [
@@ -373,7 +373,7 @@ export const PZ=[
   },
   {
     "id": "PZ-33",
-    "lv": 1,
+    "lv": 20,
     "q": "A VISION IN THE BLOOD: WHAT IS 9 - 1?",
     "h": "NINE MINUS ONE — TAKE ONE AWAY",
     "a": [
@@ -383,7 +383,7 @@ export const PZ=[
   },
   {
     "id": "PZ-34",
-    "lv": 1,
+    "lv": 21,
     "q": "A GLITCH IN THE FLESH: WHAT IS 5 - 2?",
     "h": "FIVE FINGERS, PUT DOWN TWO",
     "a": [
@@ -393,7 +393,7 @@ export const PZ=[
   },
   {
     "id": "PZ-35",
-    "lv": 1,
+    "lv": 21,
     "q": "THE SERPENT WHISPERS: WHAT IS 10 - 5?",
     "h": "TEN MINUS FIVE",
     "a": [
@@ -403,7 +403,7 @@ export const PZ=[
   },
   {
     "id": "PZ-36",
-    "lv": 1,
+    "lv": 22,
     "q": "THE SCALES SHIFT: WHAT IS 1 × 1?",
     "h": "1 TIMES TABLE — 1 GROUP OF 1",
     "a": [
@@ -413,7 +413,7 @@ export const PZ=[
   },
   {
     "id": "PZ-37",
-    "lv": 1,
+    "lv": 22,
     "q": "THE SERPENT WHISPERS: WHAT IS 2 × 1?",
     "h": "2 TIMES TABLE — 2 GROUPS OF 1",
     "a": [
@@ -423,7 +423,7 @@ export const PZ=[
   },
   {
     "id": "PZ-38",
-    "lv": 1,
+    "lv": 23,
     "q": "CARVED IN BONE: WHAT IS 2 × 2?",
     "h": "2 TIMES TABLE — 2 GROUPS OF 2",
     "a": [
@@ -433,7 +433,7 @@ export const PZ=[
   },
   {
     "id": "PZ-39",
-    "lv": 1,
+    "lv": 24,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 2 × 3?",
     "h": "2 TIMES TABLE — 2 GROUPS OF 3",
     "a": [
@@ -443,7 +443,7 @@ export const PZ=[
   },
   {
     "id": "PZ-40",
-    "lv": 1,
+    "lv": 24,
     "q": "CARVED IN BONE: WHAT IS 2 × 4?",
     "h": "2 TIMES TABLE — 2 GROUPS OF 4",
     "a": [
@@ -453,7 +453,7 @@ export const PZ=[
   },
   {
     "id": "PZ-41",
-    "lv": 1,
+    "lv": 25,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 2 × 5?",
     "h": "2 TIMES TABLE — 2 GROUPS OF 5",
     "a": [
@@ -463,7 +463,7 @@ export const PZ=[
   },
   {
     "id": "PZ-42",
-    "lv": 1,
+    "lv": 25,
     "q": "THE SERPENT WHISPERS: WHAT IS 3 × 1?",
     "h": "3 TIMES TABLE — 3 GROUPS OF 1",
     "a": [
@@ -473,7 +473,7 @@ export const PZ=[
   },
   {
     "id": "PZ-43",
-    "lv": 1,
+    "lv": 26,
     "q": "THE CYCLE DEMANDS: WHAT IS 3 × 2?",
     "h": "3 TIMES TABLE — 3 GROUPS OF 2",
     "a": [
@@ -483,7 +483,7 @@ export const PZ=[
   },
   {
     "id": "PZ-44",
-    "lv": 1,
+    "lv": 27,
     "q": "A VISION IN THE BLOOD: WHAT IS 3 × 3?",
     "h": "3 TIMES TABLE — 3 GROUPS OF 3",
     "a": [
@@ -493,7 +493,7 @@ export const PZ=[
   },
   {
     "id": "PZ-45",
-    "lv": 1,
+    "lv": 27,
     "q": "THE SCALES SHIFT: WHAT IS 3 × 4?",
     "h": "3 TIMES TABLE — 3 GROUPS OF 4",
     "a": [
@@ -503,7 +503,7 @@ export const PZ=[
   },
   {
     "id": "PZ-46",
-    "lv": 1,
+    "lv": 28,
     "q": "THE SCALES SHIFT: WHAT IS 3 × 5?",
     "h": "3 TIMES TABLE — 3 GROUPS OF 5",
     "a": [
@@ -513,7 +513,7 @@ export const PZ=[
   },
   {
     "id": "PZ-47",
-    "lv": 1,
+    "lv": 28,
     "q": "A GLITCH IN THE FLESH: WHAT IS 4 × 1?",
     "h": "4 TIMES TABLE — 4 GROUPS OF 1",
     "a": [
@@ -523,7 +523,7 @@ export const PZ=[
   },
   {
     "id": "PZ-48",
-    "lv": 1,
+    "lv": 29,
     "q": "A VISION IN THE BLOOD: WHAT IS 4 × 2?",
     "h": "4 TIMES TABLE — 4 GROUPS OF 2",
     "a": [
@@ -533,7 +533,7 @@ export const PZ=[
   },
   {
     "id": "PZ-49",
-    "lv": 1,
+    "lv": 30,
     "q": "THE SCALES SHIFT: WHAT IS 4 × 3?",
     "h": "4 TIMES TABLE — 4 GROUPS OF 3",
     "a": [
@@ -543,7 +543,7 @@ export const PZ=[
   },
   {
     "id": "PZ-50",
-    "lv": 1,
+    "lv": 30,
     "q": "A GLITCH IN THE FLESH: WHAT IS 4 × 4?",
     "h": "4 TIMES TABLE — 4 GROUPS OF 4",
     "a": [
@@ -553,7 +553,7 @@ export const PZ=[
   },
   {
     "id": "PZ-51",
-    "lv": 1,
+    "lv": 31,
     "q": "CARVED IN BONE: WHAT IS 4 × 5?",
     "h": "4 TIMES TABLE — 4 GROUPS OF 5",
     "a": [
@@ -563,7 +563,7 @@ export const PZ=[
   },
   {
     "id": "PZ-52",
-    "lv": 1,
+    "lv": 31,
     "q": "THE SERPENT WHISPERS: WHAT IS 5 × 1?",
     "h": "5 TIMES TABLE — 5 GROUPS OF 1",
     "a": [
@@ -573,7 +573,7 @@ export const PZ=[
   },
   {
     "id": "PZ-53",
-    "lv": 1,
+    "lv": 32,
     "q": "THE SERPENT WHISPERS: WHAT IS 5 × 2?",
     "h": "5 TIMES TABLE — 5 GROUPS OF 2",
     "a": [
@@ -583,7 +583,7 @@ export const PZ=[
   },
   {
     "id": "PZ-54",
-    "lv": 1,
+    "lv": 33,
     "q": "THE SERPENT WHISPERS: WHAT IS 5 × 3?",
     "h": "5 TIMES TABLE — 5 GROUPS OF 3",
     "a": [
@@ -593,7 +593,7 @@ export const PZ=[
   },
   {
     "id": "PZ-55",
-    "lv": 1,
+    "lv": 33,
     "q": "THE SCALES SHIFT: WHAT IS 5 × 4?",
     "h": "5 TIMES TABLE — 5 GROUPS OF 4",
     "a": [
@@ -603,7 +603,7 @@ export const PZ=[
   },
   {
     "id": "PZ-56",
-    "lv": 1,
+    "lv": 34,
     "q": "THE SERPENT WHISPERS: WHAT IS 5 × 5?",
     "h": "5 TIMES TABLE — 5 GROUPS OF 5",
     "a": [
@@ -613,7 +613,7 @@ export const PZ=[
   },
   {
     "id": "PZ-57",
-    "lv": 1,
+    "lv": 34,
     "q": "A GLITCH IN THE FLESH: WHAT IS 10 × 1?",
     "h": "10 TIMES TABLE — 10 GROUPS OF 1",
     "a": [
@@ -623,7 +623,7 @@ export const PZ=[
   },
   {
     "id": "PZ-58",
-    "lv": 1,
+    "lv": 35,
     "q": "A VISION IN THE BLOOD: WHAT IS 10 × 2?",
     "h": "10 TIMES TABLE — 10 GROUPS OF 2",
     "a": [
@@ -633,7 +633,7 @@ export const PZ=[
   },
   {
     "id": "PZ-59",
-    "lv": 1,
+    "lv": 36,
     "q": "THE SCALES SHIFT: WHAT IS 10 × 3?",
     "h": "10 TIMES TABLE — 10 GROUPS OF 3",
     "a": [
@@ -643,7 +643,7 @@ export const PZ=[
   },
   {
     "id": "PZ-60",
-    "lv": 1,
+    "lv": 36,
     "q": "A VISION IN THE BLOOD: WHAT IS 10 × 5?",
     "h": "10 TIMES TABLE — 10 GROUPS OF 5",
     "a": [
@@ -653,7 +653,7 @@ export const PZ=[
   },
   {
     "id": "PZ-61",
-    "lv": 1,
+    "lv": 37,
     "q": "THE SCALES SHIFT: WHAT IS 1 SQUARED (1²)?",
     "h": "1 × 1 = ?",
     "a": [
@@ -663,7 +663,7 @@ export const PZ=[
   },
   {
     "id": "PZ-62",
-    "lv": 1,
+    "lv": 37,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 2 SQUARED (2²)?",
     "h": "2 × 2 = ?",
     "a": [
@@ -673,7 +673,7 @@ export const PZ=[
   },
   {
     "id": "PZ-63",
-    "lv": 1,
+    "lv": 38,
     "q": "THE CYCLE DEMANDS: WHAT IS 3 SQUARED (3²)?",
     "h": "3 × 3 = ?",
     "a": [
@@ -683,7 +683,7 @@ export const PZ=[
   },
   {
     "id": "PZ-64",
-    "lv": 1,
+    "lv": 39,
     "q": "A VISION IN THE BLOOD: WHAT IS 4 SQUARED (4²)?",
     "h": "4 × 4 = ?",
     "a": [
@@ -693,7 +693,7 @@ export const PZ=[
   },
   {
     "id": "PZ-65",
-    "lv": 1,
+    "lv": 39,
     "q": "CARVED IN BONE: WHAT IS 5 SQUARED (5²)?",
     "h": "5 × 5 = ?",
     "a": [
@@ -703,7 +703,7 @@ export const PZ=[
   },
   {
     "id": "PZ-66",
-    "lv": 1,
+    "lv": 40,
     "q": "THE SCALES SHIFT: WHAT IS 6 SQUARED (6²)?",
     "h": "6 × 6 = ?",
     "a": [
@@ -713,7 +713,7 @@ export const PZ=[
   },
   {
     "id": "PZ-67",
-    "lv": 1,
+    "lv": 40,
     "q": "CARVED IN BONE: WHAT IS 7 SQUARED (7²)?",
     "h": "7 × 7 = ?",
     "a": [
@@ -723,7 +723,7 @@ export const PZ=[
   },
   {
     "id": "PZ-68",
-    "lv": 1,
+    "lv": 41,
     "q": "THE SERPENT WHISPERS: WHAT IS 8 SQUARED (8²)?",
     "h": "8 × 8 = ?",
     "a": [
@@ -733,7 +733,7 @@ export const PZ=[
   },
   {
     "id": "PZ-69",
-    "lv": 1,
+    "lv": 41,
     "q": "A GLITCH IN THE FLESH: WHAT IS 9 SQUARED (9²)?",
     "h": "9 × 9 = ?",
     "a": [
@@ -743,7 +743,7 @@ export const PZ=[
   },
   {
     "id": "PZ-70",
-    "lv": 1,
+    "lv": 42,
     "q": "THE SCALES SHIFT: WHAT IS 10 SQUARED (10²)?",
     "h": "10 × 10 = ?",
     "a": [
@@ -753,7 +753,7 @@ export const PZ=[
   },
   {
     "id": "PZ-71",
-    "lv": 1,
+    "lv": 43,
     "q": "THE SERPENT WHISPERS: WHAT IS THE SQUARE OF 11 (11²)?",
     "h": "11 × 11 = ?",
     "a": [
@@ -763,7 +763,7 @@ export const PZ=[
   },
   {
     "id": "PZ-72",
-    "lv": 1,
+    "lv": 43,
     "q": "CARVED IN BONE: WHAT IS THE SQUARE OF 12 (12²)?",
     "h": "12 × 12 = ?",
     "a": [
@@ -773,7 +773,7 @@ export const PZ=[
   },
   {
     "id": "PZ-73",
-    "lv": 1,
+    "lv": 44,
     "q": "A GLITCH IN THE FLESH: WHAT NUMBER, WHEN SQUARED, GIVES 4?",
     "h": "? × ? = 4 — THE SQUARE ROOT OF 4",
     "a": [
@@ -783,7 +783,7 @@ export const PZ=[
   },
   {
     "id": "PZ-74",
-    "lv": 1,
+    "lv": 44,
     "q": "CARVED IN BONE: WHAT NUMBER, WHEN SQUARED, GIVES 9?",
     "h": "? × ? = 9 — THE SQUARE ROOT OF 9",
     "a": [
@@ -793,7 +793,7 @@ export const PZ=[
   },
   {
     "id": "PZ-75",
-    "lv": 1,
+    "lv": 45,
     "q": "A VOICE FROM THE DARKNESS: WHAT NUMBER, WHEN SQUARED, GIVES 25?",
     "h": "? × ? = 25 — THE SQUARE ROOT OF 25",
     "a": [
@@ -803,7 +803,7 @@ export const PZ=[
   },
   {
     "id": "PZ-76",
-    "lv": 1,
+    "lv": 46,
     "q": "THE CYCLE DEMANDS: WHAT IS 2 + 2 + 2?",
     "h": "ADD THREE 2S TOGETHER",
     "a": [
@@ -813,7 +813,7 @@ export const PZ=[
   },
   {
     "id": "PZ-77",
-    "lv": 1,
+    "lv": 46,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 3 + 3 + 3?",
     "h": "ADD THREE 3S TOGETHER",
     "a": [
@@ -823,7 +823,7 @@ export const PZ=[
   },
   {
     "id": "PZ-78",
-    "lv": 1,
+    "lv": 47,
     "q": "A GLITCH IN THE FLESH: HOW MANY DAYS IN A WEEK?",
     "h": "MON TUE WED THU FRI SAT SUN — COUNT THEM",
     "a": [
@@ -833,7 +833,7 @@ export const PZ=[
   },
   {
     "id": "PZ-79",
-    "lv": 1,
+    "lv": 47,
     "q": "THE CYCLE DEMANDS: HOW MANY MONTHS IN A YEAR?",
     "h": "COUNT FROM JANUARY TO DECEMBER",
     "a": [
@@ -843,7 +843,7 @@ export const PZ=[
   },
   {
     "id": "PZ-80",
-    "lv": 1,
+    "lv": 48,
     "q": "THE SERPENT WHISPERS: HOW MANY FINGERS ON TWO HANDS?",
     "h": "COUNT ALL YOUR FINGERS",
     "a": [
@@ -853,7 +853,7 @@ export const PZ=[
   },
   {
     "id": "PZ-81",
-    "lv": 1,
+    "lv": 49,
     "q": "THE CYCLE DEMANDS: HOW MANY SIDES DOES A SQUARE HAVE?",
     "h": "THINK OF A SQUARE — COUNT EACH SIDE",
     "a": [
@@ -863,7 +863,7 @@ export const PZ=[
   },
   {
     "id": "PZ-82",
-    "lv": 1,
+    "lv": 49,
     "q": "THE SERPENT WHISPERS: HOW MANY SIDES DOES A TRIANGLE HAVE?",
     "h": "THINK OF A TRIANGLE — COUNT EACH SIDE",
     "a": [
@@ -873,7 +873,7 @@ export const PZ=[
   },
   {
     "id": "PZ-83",
-    "lv": 1,
+    "lv": 50,
     "q": "THE CYCLE DEMANDS: HOW MANY SIDES DOES A CIRCLE HAVE?",
     "h": "LOOK CAREFULLY — DOES A CIRCLE HAVE ANY STRAIGHT SIDES?",
     "a": [
@@ -883,7 +883,7 @@ export const PZ=[
   },
   {
     "id": "PZ-84",
-    "lv": 1,
+    "lv": 50,
     "q": "THE SCALES SHIFT: WHAT IS THE SHAPE WITH 6 SIDES CALLED?",
     "h": "HEX MEANS SIX — HEX-A-GON",
     "a": [
@@ -893,7 +893,7 @@ export const PZ=[
   },
   {
     "id": "PZ-85",
-    "lv": 1,
+    "lv": 51,
     "q": "CARVED IN BONE: WHAT COMES NEXT: 2, 4, 6, 8, ?",
     "h": "COUNT BY 2S — EVEN NUMBERS",
     "a": [
@@ -903,7 +903,7 @@ export const PZ=[
   },
   {
     "id": "PZ-86",
-    "lv": 1,
+    "lv": 52,
     "q": "THE CYCLE DEMANDS: WHAT COMES NEXT: 5, 10, 15, 20, ?",
     "h": "COUNT BY 5S",
     "a": [
@@ -913,7 +913,7 @@ export const PZ=[
   },
   {
     "id": "PZ-87",
-    "lv": 1,
+    "lv": 52,
     "q": "THE CYCLE DEMANDS: WHAT COMES NEXT: 10, 20, 30, 40, ?",
     "h": "COUNT BY 10S",
     "a": [
@@ -923,7 +923,7 @@ export const PZ=[
   },
   {
     "id": "PZ-88",
-    "lv": 1,
+    "lv": 53,
     "q": "A GLITCH IN THE FLESH: WHAT COMES NEXT: 1, 3, 5, 7, ?",
     "h": "ODD NUMBERS — COUNT BY 2S STARTING FROM 1",
     "a": [
@@ -933,7 +933,7 @@ export const PZ=[
   },
   {
     "id": "PZ-89",
-    "lv": 1,
+    "lv": 53,
     "q": "A VISION IN THE BLOOD: WHAT COMES NEXT: A, C, E, G, ?",
     "h": "SKIP EVERY OTHER LETTER",
     "a": [
@@ -943,7 +943,7 @@ export const PZ=[
   },
   {
     "id": "PZ-90",
-    "lv": 1,
+    "lv": 54,
     "q": "THE SERPENT WHISPERS: WHAT COMES NEXT: Z, Y, X, W, ?",
     "h": "THE ALPHABET BACKWARDS",
     "a": [
@@ -953,7 +953,7 @@ export const PZ=[
   },
   {
     "id": "PZ-91",
-    "lv": 1,
+    "lv": 55,
     "q": "CARVED IN BONE: WHAT IS 6 × 1?",
     "h": "6 TIMES TABLE — ANY NUMBER TIMES 1 STAYS THE SAME",
     "a": [
@@ -963,7 +963,7 @@ export const PZ=[
   },
   {
     "id": "PZ-92",
-    "lv": 1,
+    "lv": 55,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 6 × 2?",
     "h": "6 TIMES TABLE — 6 GROUPS OF 2",
     "a": [
@@ -973,7 +973,7 @@ export const PZ=[
   },
   {
     "id": "PZ-93",
-    "lv": 1,
+    "lv": 56,
     "q": "THE SERPENT WHISPERS: WHAT IS 6 × 3?",
     "h": "6 TIMES TABLE — 6 GROUPS OF 3",
     "a": [
@@ -983,7 +983,7 @@ export const PZ=[
   },
   {
     "id": "PZ-94",
-    "lv": 1,
+    "lv": 56,
     "q": "A VISION IN THE BLOOD: WHAT IS 6 × 4?",
     "h": "6 TIMES TABLE — 6 GROUPS OF 4",
     "a": [
@@ -993,7 +993,7 @@ export const PZ=[
   },
   {
     "id": "PZ-95",
-    "lv": 1,
+    "lv": 57,
     "q": "THE SCALES SHIFT: WHAT IS 6 × 5?",
     "h": "6 TIMES TABLE — 6 GROUPS OF 5",
     "a": [
@@ -1003,7 +1003,7 @@ export const PZ=[
   },
   {
     "id": "PZ-96",
-    "lv": 1,
+    "lv": 58,
     "q": "A GLITCH IN THE FLESH: WHAT IS 6 × 6?",
     "h": "6 TIMES TABLE — 6 GROUPS OF 6",
     "a": [
@@ -1013,7 +1013,7 @@ export const PZ=[
   },
   {
     "id": "PZ-97",
-    "lv": 1,
+    "lv": 58,
     "q": "THE SERPENT WHISPERS: WHAT COMES NEXT IN THE ALPHABET AFTER Y?",
     "h": "ALMOST AT THE END — Y AND THEN?",
     "a": [
@@ -1023,7 +1023,7 @@ export const PZ=[
   },
   {
     "id": "PZ-98",
-    "lv": 1,
+    "lv": 59,
     "q": "THE CYCLE DEMANDS: WHAT IS 0 × 100?",
     "h": "ANY NUMBER TIMES ZERO IS ALWAYS THE SAME ANSWER",
     "a": [
@@ -1033,7 +1033,7 @@ export const PZ=[
   },
   {
     "id": "PZ-99",
-    "lv": 1,
+    "lv": 59,
     "q": "A VOICE FROM THE DARKNESS: WHAT IS 1 × 999?",
     "h": "ANY NUMBER TIMES ONE STAYS THE SAME",
     "a": [
@@ -1043,7 +1043,7 @@ export const PZ=[
   },
   {
     "id": "PZ-100",
-    "lv": 1,
+    "lv": 60,
     "q": "THE CYCLE DEMANDS: WHAT IS 7 SQUARED (7²)?",
     "h": "7 × 7 = ?",
     "a": [
@@ -1053,7 +1053,7 @@ export const PZ=[
   },
   {
     "id": "L0-0",
-    "lv": 1,
+    "lv": 0,
     "q": "THE SERPENT HUNGERS. WHAT IS ITS TRUE NAME?",
     "a": [
       "OUROBOROS"

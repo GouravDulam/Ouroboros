@@ -5,6 +5,19 @@ const puzzlesPath = path.join(__dirname, 'client', 'src', 'parsed_puzzles.json')
 const dataPath = path.join(__dirname, 'client', 'src', 'data.js');
 
 const puzzles = JSON.parse(fs.readFileSync(puzzlesPath, 'utf-8'));
+
+// FIX: Automatically assign progressive levels so the game doesn't crash/end instantly
+// because the user set all puzzles to 'lv: 1'.
+let currentLv = 1;
+puzzles.forEach((p, idx) => {
+  if (p.id === 'L0-0') {
+    p.lv = 0;
+  } else {
+    // Distribute 100 puzzles across 60 levels
+    p.lv = Math.min(60, Math.ceil((idx + 1) / (puzzles.length / 60)));
+  }
+});
+
 let dataStr = fs.readFileSync(dataPath, 'utf-8');
 
 const startTag = 'export const PZ=[';
